@@ -25,7 +25,7 @@
 const giorni = [
   {
     id:0, tag:"LUN", nome:"LUNEDÌ", emoji:"💪", tipo:"allenamento",
-    focus:"Petto · Schiena · Spalle (Calisthenics Upper)",
+    focus:"Petto · Schiena · Spalle (Corpo Libero)",
     colore:"#22c55e", giri:"3 giri", durata:"~50 min",
     recupero:45, recuperoMin:"45 SEC", recuperoLungo:120, recuperoMinLungo:"2 MIN",
     blocchi:[
@@ -39,7 +39,7 @@ const giorni = [
         { nome:"Trazioni normali (presa larga pronata)", tag:"SCHIENA", tagC:"#f97316", muscolo:"Gran dorsale · Romboidei · Bicipiti", reps:"Max rip (min 5)",
           come:"Presa pronata (dorso delle mani verso di te) più larga delle spalle. Braccia tese, corpo fermo. Spingi i gomiti verso i fianchi mentre sali. Mento sopra la sbarra. Scendi lento (3 sec). La trazione verticale è il fondamento della schiena nel calisthenics.",
           alt:[
-            { nome:"Negative pull-ups", come:"Sali con un salto fino in cima. Poi scendi il più lento possibile (5-8 sec). Costruisce forza anche senza riuscire a salire da solo." },
+            { nome:"Trazioni orizzontali (inverted rows)", come:"Sdraiato sotto un tavolo solido, presa larga sul bordo. Tira il petto verso la superficie. Corpo rigido. Stessa schiena delle trazioni verticali, senza sbarra." },
             { nome:"Trazioni orizzontali (inverted rows)", come:"Sdraiato sotto un tavolo solido, presa sul bordo. Tira il petto verso la superficie tenendo il corpo rigido. Zero sbarra necessaria — stessa catena muscolare." }
           ], semplificata:"Inverted rows sotto il tavolo — corpo inclinato, tira il petto. Stessa schiena, niente sbarra." },
         { nome:"Diamond push-ups", tag:"TRICIPITI", tagC:"#3b82f6", muscolo:"Tricipiti · Petto interno", reps:"10 rip",
@@ -59,7 +59,7 @@ const giorni = [
         { nome:"Trazioni inverse (chin-ups, presa supinata)", tag:"BICIPITI", tagC:"#f97316", muscolo:"Bicipiti · Gran dorsale · Core", reps:"Max rip (min 4)",
           come:"Presa supinata (palmi verso di te) alla larghezza delle spalle. Sali tirando i gomiti verso i fianchi. In cima stringi il bicipite. Scendi lento (3 sec). Più facile delle trazioni normali perché i bicipiti contribuiscono maggiormente — buon punto di ingresso.",
           alt:[
-            { nome:"Negative chin-ups", come:"Sali con un salto fino in cima. Poi scendi lentissimo (6-8 sec). Costruisce la forza passiva del bicipite." },
+            { nome:"Inverted rows presa supinata", come:"Sdraiato sotto un tavolo, presa sul bordo con i palmi verso di te. Tira il petto verso il tavolo. Stessi bicipiti e dorsali dei chin-up, senza sbarra." },
             { nome:"Inverted rows presa supinata", come:"Come le trazioni orizzontali sotto il tavolo ma con i palmi rivolti verso di te. Enfatizza i bicipiti." }
           ], semplificata:"Inverted rows con palmi verso di te — sotto il tavolo, presa supinata." },
         { nome:"Pike push-ups", tag:"SPALLE", tagC:"#a855f7", muscolo:"Deltoide anteriore · Tricipiti · Core", reps:"12 rip",
@@ -131,7 +131,7 @@ const giorni = [
           come:"Da in piedi → squat → mani a terra → salta indietro in plank → flessione → salta avanti → salta in alto con le braccia sopra la testa. Un ciclo completo. Non fermarti. Migliora la resistenza anaerobica esattamente come succede nel calcio.",
           alt:[
             { nome:"Burpee senza salto (step-back)", come:"Invece di saltare in plank, metti un piede alla volta. Invece di saltare in alto, torna solo in piedi. Stessa sequenza ma meno impatto." },
-            { nome:"Burpee + pull-up", come:"Dopo il salto in alto, agganciati alla sbarra e fai una trazione. Esercizio completo: forza + cardio + potenza verticale." }
+            { nome:"Star jump", come:"Da in piedi, salta aprendo braccia e gambe a stella nel punto più alto. Atterra morbido. 12 rip. Stesso effetto cardio del burpee, movimento completamente diverso." }
           ], semplificata:"Squat thrust — senza il salto finale, senza la flessione. Solo: squat → plank → squat → rialzati. La base del burpee." },
         { nome:"Mountain climbers", tag:"CORE CARDIO", tagC:"#22c55e", muscolo:"Core · Spalle · Cardio lattacido", reps:"30 sec",
           come:"In posizione di plank sulle mani. Porta un ginocchio verso il petto il più veloce possibile, poi cambia. Come se stessi correndo sul posto in posizione orizzontale. Non alzare i fianchi — la schiena rimane dritta. 30 sec al massimo della velocità.",
@@ -140,24 +140,19 @@ const giorni = [
             { nome:"Cross-body mountain climbers", come:"Porta il ginocchio destro verso il gomito sinistro. Poi sinistra verso destra. Aggiunge rotazione — lavora gli obliqui." }
           ], semplificata:"Knee-to-chest in piedi — in piedi, porta le ginocchia al petto veloce alternando. Zero impatto sulle spalle, stesso effetto cardio." }
       ]},
-      { id:"C", label:"BLOCCO C — CORE ATLETICO", esercizi:[
-        { nome:"Leg raises (sollevamento gambe)", tag:"CORE", tagC:"#94a3b8", muscolo:"Core profondo · Flessori anca · Addome basso", reps:"12 rip",
-          come:"Sdraiato sul tappetino, braccia ai fianchi o sotto i glutei per supporto lombare. Gambe tese e unite. Alzale lentamente fino a 90°. Abbassa lento (3 sec) senza toccare terra. La schiena rimane piatta durante tutta la discesa — questo è il punto critico.",
+      { id:"C", label:"BLOCCO C — ADDOMINALI A SCELTA", esercizi:[
+        { nome:"Addominali a scelta", tag:"CORE", tagC:"#94a3b8", muscolo:"Addome · Obliqui · Core", reps:"3 × 15-20 rip",
+          come:"Scegli uno o più esercizi dalla lista qui sotto in base a come ti senti. Puoi cambiare ogni allenamento. Tutti lavorano zone diverse dell'addome.",
           alt:[
-            { nome:"Hanging knee raise alla sbarra", come:"Appeso alla sbarra, porta le ginocchia al petto il più in alto possibile. Abbassa lento. 12 rip." },
-            { nome:"Bicycle crunch", come:"Sdraiato, mani dietro la testa. Porta il gomito destro verso il ginocchio sinistro mentre estendi la gamba destra. Alterna. 20 rip totali. Lavora gli stessi muscoli (addome basso + obliqui) con un movimento completamente diverso." }
-          ], semplificata:"Leg raises con ginocchia piegate — stessa traiettoria, meno carico sui flessori." },
-        { nome:"L-sit su sedie (o parallele)", tag:"CORE", tagC:"#94a3b8", muscolo:"Core · Tricipiti · Flessori anca", reps:"3 × 20 sec",
-          come:"Appoggia le mani sul bordo di due sedie stabili. Spingi in su sollevando il corpo. Tendi le gambe orizzontali davanti a te (forma a L). Tieni. Se non riesci, tieni le ginocchia piegate. Sviluppa forza core e tricipiti insieme.",
-          alt:[
-            { nome:"Crunch classico", come:"Sdraiato, ginocchia piegate, mani sul petto. Solleva le spalle da terra contraendo gli addominali. 20 rip lente. Lavora il retto addominale — zona diversa rispetto all'L-sit." },
-            { nome:"Hanging knee raise alla sbarra", come:"Appeso alla sbarra, tieni le ginocchia al petto più a lungo possibile. 30-45 sec. Stesso lavoro del core ma in sospensione, senza richiedere spinta delle braccia." }
-          ], semplificata:"Flessori anca seduto — seduto sul bordo della sedia, alza le ginocchia verso il petto tenendo le mani ai lati della sedia. 15 rip. Costruisce la forza base per l'L-sit." },
-        { nome:"Plank to downward dog", tag:"CORE MOBILITÀ", tagC:"#94a3b8", muscolo:"Core · Spalle · Catena posteriore", reps:"15 rip",
-          come:"Dal plank sulle mani, spingi i fianchi verso il soffitto formando un triangolo (downward dog). Tieni 1 sec. Torna al plank. Continua. Migliora sia la forza del core che la mobilità della catena posteriore — fondamentale per un calciatore.",
-          alt:[
-            { nome:"Inchworm", come:"Da in piedi, abbassati con le mani a terra, cammina con le mani fino al plank, poi torna camminando i piedi verso le mani. 10 rip. Ottimo per la mobilità." }
-          ], semplificata:"Plank statico 40 sec — padroneggia prima il plank, poi aggiungi il movimento verso il dog." }
+            { nome:"Crunch classico", come:"Sdraiato, ginocchia piegate, piedi a terra. Mani sul petto. Solleva le spalle da terra contraendo il retto addominale. Abbassa lento. Lavora: addome superiore." },
+            { nome:"Bicycle crunch", come:"Sdraiato, mani dietro la testa. Porta il gomito destro verso il ginocchio sinistro mentre estendi la gamba destra. Alterna. 20 rip totali. Lavora: retto addominale + obliqui." },
+            { nome:"Leg raises", come:"Sdraiato, braccia ai fianchi. Gambe tese, alzale fino a 90°, poi abbassa lento senza toccare terra. Lavora: addome basso + flessori anca." },
+            { nome:"Russian twist", come:"Seduto con ginocchia piegate, piedi alzati. Inclina il busto a 45°. Ruota da destra a sinistra toccando il pavimento. 15 rip per lato. Con bottiglia se vuoi più intensità. Lavora: obliqui." },
+            { nome:"Sit-up completo", come:"Sdraiato, ginocchia piegate. Sali completamente fino a stare seduto. Abbassa lento. Lavora tutto il retto addominale." },
+            { nome:"Plank laterale (side plank)", come:"Sul fianco, appoggia sul gomito. Alza i fianchi formando una linea retta. Tieni 20-30 sec per lato. Lavora: obliqui + stabilizzatori laterali." },
+            { nome:"Crunch inverso", come:"Sdraiato, braccia ai fianchi. Piega le ginocchia a 90°. Porta le ginocchia verso il petto sollevando i glutei da terra. Abbassa lento. Lavora: addome basso." },
+            { nome:"Tocca-talloni (heel touch)", come:"Sdraiato, ginocchia piegate, piedi a terra. Alza leggermente le spalle. Porta la mano destra verso il tallone destro, poi sinistra verso sinistra. Alterna. 20 rip. Lavora: obliqui in modo semplice." }
+          ], semplificata:"Crunch classico — l'esercizio più semplice. 3 × 15 rip lente." }
       ]}
     ]
   },
@@ -180,7 +175,7 @@ const giorni = [
   },
   {
     id:4, tag:"VEN", nome:"VENERDÌ", emoji:"⚡", tipo:"allenamento",
-    focus:"Full Body Power — Calisthenics Avanzato",
+    focus:"Full Body — Corpo Libero",
     colore:"#f97316", giri:"3 giri", durata:"~55 min",
     recupero:60, recuperoMin:"60 SEC", recuperoLungo:150, recuperoMinLungo:"2:30 MIN",
     blocchi:[
@@ -224,25 +219,19 @@ const giorni = [
             { nome:"Inverted rows presa stretta", come:"Inverted rows sotto il tavolo con le mani vicine. Enfatizza la parte centrale e inferiore della schiena." }
           ], semplificata:"Pull-ups normali — prima costruisci la forza base, poi affina la presa stretta." }
       ]},
-      { id:"C", label:"BLOCCO C — CORE + METABOLICO", esercizi:[
-        { nome:"L-sit su sedie", tag:"CORE", tagC:"#94a3b8", muscolo:"Core · Tricipiti · Flessori anca", reps:"3 × 20 sec",
-          come:"Mani sul bordo di due sedie stabili. Spingi in su sollevando il corpo. Tendi le gambe orizzontali davanti (forma a L). Tieni. Se non riesci, tieni le ginocchia piegate.",
+      { id:"C", label:"BLOCCO C — ADDOMINALI A SCELTA", esercizi:[
+        { nome:"Addominali a scelta", tag:"CORE", tagC:"#94a3b8", muscolo:"Addome · Obliqui · Core", reps:"3 × 15-20 rip",
+          come:"Scegli uno o più esercizi dalla lista qui sotto in base a come ti senti. Puoi cambiare ogni allenamento. Tutti lavorano zone diverse dell'addome.",
           alt:[
-            { nome:"Tuck L-sit (ginocchia piegate)", come:"Stessa posizione ma ginocchia al petto. 60% più facile." },
-            { nome:"Hanging knee raise alla sbarra", come:"Appeso alla sbarra, tieni le ginocchia al petto il più a lungo possibile. 30-45 sec." }
-          ], semplificata:"Flessori anca seduto sul bordo della sedia — costruisce la forza base. 15 rip." },
-        { nome:"Burpees", tag:"FULL BODY", tagC:"#22c55e", muscolo:"Full body · Cardio · Esplosività", reps:"10 rip",
-          come:"Da in piedi: squat, mani a terra, salta indietro in plank, flessione, salta avanti, salta in alto con braccia sopra la testa. Non fermarti tra una rip e l'altra.",
-          alt:[
-            { nome:"Burpee senza salto (step-back)", come:"Invece di saltare in plank, metti un piede alla volta. Invece di saltare in alto, torna solo in piedi." },
-            { nome:"Squat thrust", come:"Solo: squat, plank, squat, rialzati. La base del burpee senza salto finale." }
-          ], semplificata:"Squat thrust — senza il salto finale, senza la flessione." },
-        { nome:"Russian twist veloce", tag:"CORE CARDIO", tagC:"#94a3b8", muscolo:"Obliqui · Core · Resistenza", reps:"20 rip per lato",
-          come:"Seduto con ginocchia piegate e piedi alzati da terra. Inclina il busto a 45°. Ruota velocemente il busto da destra a sinistra toccando il pavimento con le mani. 20 rip per lato (40 totali). Per aumentare: tieni una bottiglia d'acqua piena.",
-          alt:[
-            { nome:"Russian twist con bottiglia 1,5L", come:"Stessa tecnica con una bottiglia piena. Aumenta il carico sugli obliqui senza manubri." },
-            { nome:"Crunch obliquo", come:"Sdraiato, porta il gomito al ginocchio opposto. 15 rip per lato. Stessi muscoli, meno equilibrio richiesto." }
-          ], semplificata:"Crunch obliquo — porta il gomito al ginocchio opposto. 15 rip per lato." }
+            { nome:"Crunch classico", come:"Sdraiato, ginocchia piegate, piedi a terra. Mani sul petto. Solleva le spalle da terra contraendo il retto addominale. Abbassa lento. Lavora: addome superiore." },
+            { nome:"Bicycle crunch", come:"Sdraiato, mani dietro la testa. Porta il gomito destro verso il ginocchio sinistro mentre estendi la gamba destra. Alterna. 20 rip totali. Lavora: retto addominale + obliqui." },
+            { nome:"Leg raises", come:"Sdraiato, braccia ai fianchi. Gambe tese, alzale fino a 90°, poi abbassa lento senza toccare terra. Lavora: addome basso + flessori anca." },
+            { nome:"Russian twist", come:"Seduto con ginocchia piegate, piedi alzati. Inclina il busto a 45°. Ruota da destra a sinistra toccando il pavimento. 15 rip per lato. Con bottiglia se vuoi più intensità. Lavora: obliqui." },
+            { nome:"Sit-up completo", come:"Sdraiato, ginocchia piegate. Sali completamente fino a stare seduto. Abbassa lento. Lavora tutto il retto addominale." },
+            { nome:"Plank laterale (side plank)", come:"Sul fianco, appoggia sul gomito. Alza i fianchi formando una linea retta. Tieni 20-30 sec per lato. Lavora: obliqui + stabilizzatori laterali." },
+            { nome:"Crunch inverso", come:"Sdraiato, braccia ai fianchi. Piega le ginocchia a 90°. Porta le ginocchia verso il petto sollevando i glutei da terra. Abbassa lento. Lavora: addome basso." },
+            { nome:"Tocca-talloni (heel touch)", come:"Sdraiato, ginocchia piegate, piedi a terra. Alza leggermente le spalle. Porta la mano destra verso il tallone destro, poi sinistra verso sinistra. Alterna. 20 rip. Lavora: obliqui in modo semplice." }
+          ], semplificata:"Crunch classico — l'esercizio più semplice. 3 × 15 rip lente." }
       ]}
     ]
   },

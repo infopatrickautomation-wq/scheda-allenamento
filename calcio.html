@@ -45,7 +45,7 @@ const giorni = [
         { nome:"Diamond push-ups", tag:"TRICIPITI", tagC:"#3b82f6", muscolo:"Tricipiti · Petto interno", reps:"10 rip",
           come:"Mani sotto il petto a formare un diamante con pollici e indici. Gomiti stretti ai fianchi durante tutta la discesa. Isola i tricipiti. Scala a 8 rip se serve.",
           alt:[
-            { nome:"Close-grip push-ups", come:"Mani vicine ma non a diamante. Leggermente più facile — buona progressione prima del diamond." },
+            { nome:"Tricep extension overhead con bottiglia", come:"In piedi o seduto, tieni una bottiglia con entrambe le mani sopra la testa. Piega i gomiti abbassando la bottiglia dietro la testa. Risali estendendo le braccia. 12 rip. Lavora i tricipiti con un movimento completamente diverso dalla flessione." },
             { nome:"Tricep dips su sedia", come:"Mani sul bordo della sedia, piedi avanti, scendi abbassando il sedere verso terra. Rialzati. 12 rip." }
           ], semplificata:"Push-ups normali con gomiti stretti al corpo — stesso effetto tricipiti, forma più accessibile." }
       ]},
@@ -53,8 +53,8 @@ const giorni = [
         { nome:"Wide grip push-ups", tag:"PETTO", tagC:"#a855f7", muscolo:"Petto esterno · Core", reps:"12 rip",
           come:"Mani a terra a distanza doppia delle spalle. Abbassa lento. Il petto lavora in allungamento maggiore rispetto alla flessione normale. Difficile alzarsi — usa la forza del petto, non i tricipiti.",
           alt:[
-            { nome:"Push-ups con pausa 3 sec in basso", come:"Scendi, tieniti fermo 3 secondi nella posizione più bassa senza appoggiarti, poi spingi su. Elimina lo slancio e moltiplica l'intensità." },
-            { nome:"Explosive push-ups", come:"Spingi così forte da staccare le mani da terra. Sviluppa potenza esplosiva — fondamentale per gli sprint nel calcio." }
+            { nome:"Dips su sedia (petto)", come:"Mani sul bordo della sedia, busto inclinato in avanti di 30°. Scendi piegando i gomiti verso l'esterno. Risali. L'inclinazione del busto sposta il lavoro dal tricipite al petto — esercizio completamente diverso." },
+            { nome:"Floor press con bottiglia", come:"Sdraiato a terra, una bottiglia in ogni mano (o una sola). Spingi verso il soffitto partendo dai gomiti appoggiati a terra. 12 rip. Simula la panca ma senza attrezzatura." }
           ], semplificata:"Push-ups normali — prima padroneggia la tecnica, poi allarga la presa." },
         { nome:"Trazioni inverse (chin-ups, presa supinata)", tag:"BICIPITI", tagC:"#f97316", muscolo:"Bicipiti · Gran dorsale · Core", reps:"Max rip (min 4)",
           come:"Presa supinata (palmi verso di te) alla larghezza delle spalle. Sali tirando i gomiti verso i fianchi. In cima stringi il bicipite. Scendi lento (3 sec). Più facile delle trazioni normali perché i bicipiti contribuiscono maggiormente — buon punto di ingresso.",
@@ -65,29 +65,21 @@ const giorni = [
         { nome:"Pike push-ups", tag:"SPALLE", tagC:"#a855f7", muscolo:"Deltoide anteriore · Tricipiti · Core", reps:"12 rip",
           come:"Partenza in posizione a capanna (corpo piegato a V, fianchi in alto). Piega i gomiti abbassando la testa verso il pavimento. Spingi su. Carica le spalle in modo simile all'overhead press. Progredisce verso la verticale al muro.",
           alt:[
-            { nome:"Pike push-up con piedi su sedia", come:"Piedi su sedia o gradino, corpo più verticale. Aumenta molto il carico sulle spalle." },
-            { nome:"Handstand hold al muro", come:"Verticale con il muro come appoggio. Tieni 20-30 sec. Isometrico sulle spalle." }
+            { nome:"Overhead press con bottiglia d'acqua", come:"Seduto o in piedi, tieni una bottiglia da 1,5L con entrambe le mani. Porta il peso sopra la testa estendendo le braccia. Abbassa lento. 15 rip. Stessi muscoli (deltoide anteriore) con un movimento completamente diverso." },
+            { nome:"Sollevamenti frontali con bottiglia", come:"In piedi, bottiglia in una mano. Alza il braccio teso davanti a te fino all'altezza delle spalle. Abbassa lento. 12 rip per braccio. Isola il deltoide anteriore senza bisogno del movimento di spinta." }
           ], semplificata:"Overhead press con bottiglia d'acqua da 1,5L — impara il movimento spalle prima del pike." }
       ]},
-      { id:"C", label:"BLOCCO C — CORE", esercizi:[
-        { nome:"Hollow body hold", tag:"CORE", tagC:"#94a3b8", muscolo:"Core profondo · Addome · Postura", reps:"30 sec",
-          come:"Sdraiato. Schiena completamente piatta a terra (lombare incollata). Alza gambe e spalle pochi centimetri da terra, braccia tese sopra la testa. Tieni. Se la schiena si stacca, alza le gambe più su.",
+      { id:"C", label:"BLOCCO C — ADDOMINALI A SCELTA", esercizi:[
+        { nome:"Addominali a scelta", tag:"CORE", tagC:"#94a3b8", muscolo:"Addome · Obliqui · Core", reps:"3 × 15-20 rip",
+          come:"Scegli uno o più esercizi dalla lista qui sotto in base a come ti senti. Puoi cambiare ogni allenamento. Tutti lavorano zone diverse dell'addome — variare li tiene efficaci.",
           alt:[
-            { nome:"Hollow body rock", come:"Dalla posizione hollow, oscilla avanti e indietro come una banana. Mantieni la forma. 20 oscillazioni." },
-            { nome:"L-sit su sedie (2 sedie)", come:"Appoggia le mani su due sedie stabili, solleva il sedere e tendi le gambe orizzontali. Tieni 15 sec." }
-          ], semplificata:"Dead bug — sdraiato, abbassa una gamba tesa e il braccio opposto verso terra senza toccare, risali. 10 rip per lato." },
-        { nome:"Plank shoulder taps", tag:"CORE", tagC:"#94a3b8", muscolo:"Core · Spalle · Stabilità", reps:"20 rip (10 per lato)",
-          come:"Plank sulle mani. Con una mano tocca la spalla opposta poi torna, alterna. I fianchi NON devono ruotare. Rallenta il movimento per aumentare l'intensità sul core.",
-          alt:[
-            { nome:"Plank con sollevamento braccio e gamba opposti", come:"Dal plank, alza insieme il braccio destro e la gamba sinistra. Tieni 2 sec. Torna. Alterna." },
-            { nome:"Side plank con rotazione", come:"Plank laterale sul gomito. Porta il braccio libero sotto il corpo ruotando, poi riapri verso il soffitto. 10 rip per lato." }
-          ], semplificata:"Plank statico 40 sec — prima padroneggia il plank, poi aggiungi il movimento." },
-        { nome:"L-sit su sedie", tag:"CORE", tagC:"#94a3b8", muscolo:"Core · Tricipiti · Flessori anca", reps:"3 × 20 sec",
-          come:"Mani sul bordo di due sedie stabili. Spingi in su sollevando il corpo. Tendi le gambe orizzontali davanti a te (forma a L). Tieni. Se non riesci, tieni le ginocchia piegate.",
-          alt:[
-            { nome:"Tuck L-sit (ginocchia piegate)", come:"Stessa posizione ma ginocchia al petto invece delle gambe tese. 60% più facile." },
-            { nome:"Flessori anca seduto sul bordo della sedia", come:"Seduto sul bordo della sedia, alza le ginocchia verso il petto. 15 rip." }
-          ], semplificata:"Flessori anca seduto sul bordo della sedia — costruisce la forza base per l'L-sit." }
+            { nome:"Crunch classico", come:"Sdraiato, ginocchia piegate, piedi a terra. Mani sul petto o sfiorano le orecchie (non tirare il collo). Solleva le spalle da terra contraendo il retto addominale. Abbassa lento. Lavora: addome superiore." },
+            { nome:"Bicycle crunch", come:"Sdraiato, mani dietro la testa. Porta il gomito destro verso il ginocchio sinistro mentre estendi la gamba destra. Alterna. 20 rip totali (10 per lato). Lavora: retto addominale + obliqui insieme — il più completo." },
+            { nome:"Leg raises", come:"Sdraiato, braccia ai fianchi o mani sotto i glutei per supporto lombare. Gambe tese e unite. Alzale fino a 90°, poi abbassa lento senza toccare terra. Lavora: addome basso + flessori anca — la zona più difficile da allenare." },
+            { nome:"Russian twist", come:"Seduto con ginocchia piegate e piedi alzati da terra (o a terra se preferisci). Inclina il busto indietro a 45°. Ruota il busto da destra a sinistra toccando il pavimento con entrambe le mani. 15 rip per lato. Con una bottiglia d'acqua se vuoi più intensità. Lavora: obliqui." },
+            { nome:"Sit-up completo", come:"Sdraiato, ginocchia piegate, piedi a terra (tienili bloccati sotto il bordo del divano se puoi). Sali completamente fino a stare seduto con il busto eretto. Abbassa lento. Più completo del crunch perché attiva tutto il retto addominale." },
+            { nome:"Plank laterale (side plank)", come:"Sdraiato su un lato. Appoggia sul gomito (braccio piegato a 90°) o sulla mano tesa. Alza i fianchi fino a formare una linea dritta testa-piedi. Tieni 20-30 sec per lato. Lavora: obliqui + stabilizzatori laterali — gli addominali che le flessioni non raggiungono." }
+          ], semplificata:"Crunch classico — l'esercizio più semplice per iniziare. 3 × 15 rip lente, senti davvero l'addome lavorare." }
       ]}
     ]
   },
@@ -153,13 +145,13 @@ const giorni = [
           come:"Sdraiato sul tappetino, braccia ai fianchi o sotto i glutei per supporto lombare. Gambe tese e unite. Alzale lentamente fino a 90°. Abbassa lento (3 sec) senza toccare terra. La schiena rimane piatta durante tutta la discesa — questo è il punto critico.",
           alt:[
             { nome:"Hanging knee raise alla sbarra", come:"Appeso alla sbarra, porta le ginocchia al petto il più in alto possibile. Abbassa lento. 12 rip." },
-            { nome:"Leg raises con ginocchia piegate", come:"Stessa traiettoria ma con le ginocchia leggermente piegate. Riduce lo stress sulla zona lombare." }
+            { nome:"Bicycle crunch", come:"Sdraiato, mani dietro la testa. Porta il gomito destro verso il ginocchio sinistro mentre estendi la gamba destra. Alterna. 20 rip totali. Lavora gli stessi muscoli (addome basso + obliqui) con un movimento completamente diverso." }
           ], semplificata:"Leg raises con ginocchia piegate — stessa traiettoria, meno carico sui flessori." },
         { nome:"L-sit su sedie (o parallele)", tag:"CORE", tagC:"#94a3b8", muscolo:"Core · Tricipiti · Flessori anca", reps:"3 × 20 sec",
           come:"Appoggia le mani sul bordo di due sedie stabili. Spingi in su sollevando il corpo. Tendi le gambe orizzontali davanti a te (forma a L). Tieni. Se non riesci, tieni le ginocchia piegate. Sviluppa forza core e tricipiti insieme.",
           alt:[
-            { nome:"Tuck L-sit (ginocchia piegate)", come:"Stessa posizione ma con le ginocchia al petto invece che le gambe tese. 60% più facile — buon punto di partenza." },
-            { nome:"Hanging knee raise alla sbarra", come:"Appeso alla sbarra, tieni le ginocchia al petto più a lungo possibile. 30-45 sec. Stesso lavoro del core senza richiedere spinta delle braccia." }
+            { nome:"Crunch classico", come:"Sdraiato, ginocchia piegate, mani sul petto. Solleva le spalle da terra contraendo gli addominali. 20 rip lente. Lavora il retto addominale — zona diversa rispetto all'L-sit." },
+            { nome:"Hanging knee raise alla sbarra", come:"Appeso alla sbarra, tieni le ginocchia al petto più a lungo possibile. 30-45 sec. Stesso lavoro del core ma in sospensione, senza richiedere spinta delle braccia." }
           ], semplificata:"Flessori anca seduto — seduto sul bordo della sedia, alza le ginocchia verso il petto tenendo le mani ai lati della sedia. 15 rip. Costruisce la forza base per l'L-sit." },
         { nome:"Plank to downward dog", tag:"CORE MOBILITÀ", tagC:"#94a3b8", muscolo:"Core · Spalle · Catena posteriore", reps:"15 rip",
           come:"Dal plank sulle mani, spingi i fianchi verso il soffitto formando un triangolo (downward dog). Tieni 1 sec. Torna al plank. Continua. Migliora sia la forza del core che la mobilità della catena posteriore — fondamentale per un calciatore.",
@@ -208,8 +200,8 @@ const giorni = [
         { nome:"Trazioni orizzontali (inverted rows)", tag:"SCHIENA", tagC:"#f97316", muscolo:"Romboidei · Trapezio medio · Bicipiti", reps:"12 rip",
           come:"Sdraiato sotto un tavolo solido o una sbarra bassa. Presa sul bordo del tavolo, corpo rigido come una tavola. Tira il petto verso la superficie. Abbassa lento. Più ti avvicini all'orizzontale, più è difficile. Angolo diverso rispetto alle trazioni verticali — completa la schiena.",
           alt:[
-            { nome:"Inverted rows con gambe piegate", come:"Stessa posizione ma con le ginocchia piegate a terra — versione più facile." },
-            { nome:"Inverted rows con piedi su sedia", come:"Piedi su sedia, corpo più orizzontale — versione più difficile. Aumenta il carico." }
+            { nome:"Superman hold", come:"Sdraiato a pancia in giù, braccia tese davanti. Alza contemporaneamente braccia e gambe da terra. Tieni 2 sec. Abbassa. 12 rip. Lavora tutta la catena posteriore (dorsali bassi, glutei, femorali) con un movimento opposto alla trazione." },
+            { nome:"Rematore con bottiglia (bent-over row)", come:"In piedi, busto inclinato a 45°, una bottiglia d'acqua in mano. Tira il gomito verso il fianco come se dovessi aprire un cassetto. 12 rip per braccio. Stessa catena muscolare della trazione orizzontale." }
           ], semplificata:"Inverted rows con ginocchia piegate — corpo meno orizzontale, più accessibile." }
       ]},
       { id:"B", label:"SUPERSERIE B — TRAZIONE · SPINTA · TRAZIONE", esercizi:[
@@ -222,8 +214,8 @@ const giorni = [
         { nome:"Dips su sedie", tag:"TRICIPITI", tagC:"#3b82f6", muscolo:"Tricipiti · Petto inferiore · Spalle anteriori", reps:"12 rip",
           come:"Mani sul bordo di due sedie stabili. Corpo stretto tra le sedie. Scendi abbassando le spalle fino a quando i tricipiti sono paralleli al pavimento. Spingi su. Corpo leggermente inclinato in avanti per coinvolgere anche il petto. Non aprire i gomiti.",
           alt:[
-            { nome:"Bench dips con gambe tese", come:"Mani sulla sedia, gambe tese appoggiate su un'altra sedia davanti. Scendi e sali. Più carico rispetto ai normali dips." },
-            { nome:"Dips con ginocchia piegate", come:"Stessa posizione ma gambe piegate a terra. Riduce il peso — versione più accessibile." }
+            { nome:"Tricep extension overhead con bottiglia", come:"In piedi o seduto. Tieni una bottiglia d'acqua con entrambe le mani sopra la testa. Piega i gomiti abbassando la bottiglia dietro la testa, poi risali. 12 rip. Lavora i tricipiti con un movimento completamente diverso dal dip." },
+            { nome:"Tricep kickback con bottiglia", come:"In piedi, busto inclinato a 45°, una bottiglia in mano. Gomito alto e fermo vicino al fianco. Estendi il braccio indietro fino a quando il braccio è orizzontale. Torna lento. 12 rip per braccio. Isola il tricipite senza carico sulle spalle." }
           ], semplificata:"Dips con ginocchia piegate — stessa posizione, meno carico." },
         { nome:"Trazioni presa stretta pronata (narrow pull-ups)", tag:"SCHIENA", tagC:"#f97316", muscolo:"Dorsale inferiore · Brachiale · Core", reps:"Max rip (min 4)",
           come:"Presa pronata stretta (mani appena più strette delle spalle). Sali tirando i gomiti verso la vita invece che verso i fianchi. Attiva il dorsale inferiore e il brachiale — zona diversa rispetto alla presa larga. In cima il petto sfiora la sbarra. Scendi lento.",

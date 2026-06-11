@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scheda La Ragazza 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #0c0c0c; color: #fff; max-width: 480px; margin: 0 auto; min-height: 100vh; }
+  button { cursor: pointer; font-family: inherit; }
+  .es-detail { animation: slideDown 0.25s ease-out; overflow: hidden; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  .tab-content { animation: fadeIn 0.2s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  button:active { transform: scale(0.97); }
+  @media (hover: hover) { .es-btn:hover { background: rgba(255,255,255,0.03) !important; } }
+  .giorno-btn { transition: all 0.18s ease; }
+  .giorno-btn:hover { transform: translateY(-2px); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const giorni = [
+  {
+    id:0, tag:"LUN", nome:"LUNEDÌ", emoji:"🦵",
+    focus:"Glutei · Gambe · Core",
+    colore:"#ec4899", giri:"3 giri", durata:"~45 min",
+    blocchi:[
+      { id:"A", label:"BLOCCO A", esercizi:[
+        { nome:"Squat con manubri", tag:"GRANDE", tagC:"#a855f7", muscolo:"Gambe · Glutei", reps:"15 rip",
+          come:"Tieni un manubrio con due mani al petto. Piedi alla larghezza delle spalle. Scendi come su una sedia invisibile. Talloni sempre a terra. Risali lenta.",
+          alt:[
+            { nome:"Squat sumo con manubrio", come:"Piedi molto larghi, punte verso fuori. Manubrio che pende tra le gambe. Lavora di più interno coscia e glutei. Ottimo per le donne." },
+            { nome:"Squat con pausa 3 sec in basso", come:"Scendi normale, tieniti ferma 3 secondi nella posizione più bassa. Poi risali. Molto più intenso dello squat normale, brucia di più." }
+          ], semplificata:"Squat a corpo libero senza manubri — prima impara il movimento corretto, poi aggiungi peso." },
+        { nome:"Ponte glutei con elastico", tag:"GRANDE", tagC:"#a855f7", muscolo:"Glutei · Femorali", reps:"20 rip",
+          come:"Sdraiata. Elastico sopra le ginocchia. Piedi a terra. Spingi il bacino verso il soffitto. Tieni 2 sec in alto. Abbassa lenta. Le ginocchia non devono avvicinarsi.",
+          alt:[
+            { nome:"Ponte glutei con manubrio sulle anche", come:"Stessa posizione ma appoggia un manubrio sulle anche per aggiungere peso. Aumenta notevolmente l'intensità sul gluteo." },
+            { nome:"Ponte glutei un piede solo", come:"Una gamba tesa in aria, l'altra lavora da sola. Molto più difficile. Isola completamente il gluteo singolo." }
+          ], semplificata:"Ponte glutei senza elastico — stesso movimento ma senza la resistenza dell'elastico sulle ginocchia." },
+        { nome:"Affondi statici", tag:"GRANDE", tagC:"#a855f7", muscolo:"Gambe · Glutei", reps:"12 rip per gamba",
+          come:"Step avanti fisso. Scendi finché il ginocchio posteriore quasi tocca terra. Risali. Non spostarti, lavora sempre dallo stesso punto. Sicuro per le caviglie.",
+          alt:[
+            { nome:"Affondo laterale con manubrio", come:"Apri una gamba di lato, piegala e abbassati su quel lato. L'altra rimane dritta. Lavora interno coscia e gluteo laterale. Nessun impatto." },
+            { nome:"Affondo bulgaro (piede su sedia)", come:"Piede posteriore sulla sedia. L'altro piede avanti. Scendi e risali. Più difficile degli affondi normali. Inizia senza peso." }
+          ], semplificata:"Affondo con appoggio — tieni una mano al muro o alla sedia per l'equilibrio mentre impari il movimento." }
+      ]},
+      { id:"B", label:"BLOCCO B", esercizi:[
+        { nome:"Kickback elastico in quadrupedia", tag:"GRANDE", tagC:"#a855f7", muscolo:"Glutei", reps:"15 rip per gamba",
+          come:"In posizione a quattro zampe sul tappetino. Elastico intorno alle caviglie. Spingi una gamba indietro e in alto mantenendo il ginocchio a 90°. Tieni 1 sec in alto. Torna lenta.",
+          alt:[
+            { nome:"Donkey kick con manubrio al polpaccio", come:"Stessa posizione. Appoggia un manubrio leggero nella piega del ginocchio. Tieni il manubrio alzando la gamba. Più intenso." },
+            { nome:"Fire hydrant con elastico", come:"In quadrupedia. Elastico sopra le ginocchia. Apri il ginocchio di lato come se stessi aprendo uno sportello. Lavora il gluteo medio, parte spesso trascurata." }
+          ], semplificata:"Kickback senza elastico — stesso movimento a corpo libero. Conta 2 sec su e 2 sec giù." },
+        { nome:"Abduzione con elastico in piedi", tag:"PICCOLO", tagC:"#f59e0b", muscolo:"Gluteo medio · Esterno coscia", reps:"15 rip per gamba",
+          come:"In piedi. Elastico intorno alle caviglie. Tieniti alla sedia con una mano per equilibrio. Apri la gamba di lato il più possibile. Torna lenta. Nessun impatto sulle caviglie.",
+          alt:[
+            { nome:"Abduzione sdraiata con elastico", come:"Sdraiata su un fianco. Elastico sopra le ginocchia. Apri la gamba superiore verso l'alto come uno schiaccianoci. 15 rip per lato." },
+            { nome:"Clamshell con elastico", come:"Sdraiata su un fianco, ginocchia piegate a 90°. Elastico sopra le ginocchia. Apri il ginocchio superiore verso il soffitto. Torna lenta. Isola il gluteo medio." }
+          ], semplificata:"Abduzione senza elastico sdraiata — stesso movimento ma senza resistenza." }
+      ]},
+      { id:"C", label:"BLOCCO C", esercizi:[
+        { nome:"Plank", tag:"CORE", tagC:"#94a3b8", muscolo:"Core completo", reps:"35 sec",
+          come:"Gomiti sotto le spalle. Corpo rigido. Non abbassare i fianchi. Stringi la pancia e i glutei. Respira.",
+          alt:[
+            { nome:"Plank con tocco spalla alternato", come:"In posizione di plank sulle mani. Porta una mano a toccare la spalla opposta, poi torna. Alterna. I fianchi non devono oscillare." },
+            { nome:"Plank laterale con sollevamento fianchi", come:"Su un fianco appoggiata sul gomito. Abbassa i fianchi verso terra e risali. 12 rip per lato. Ottimo per la vita." }
+          ], semplificata:"Plank su ginocchia — stessa posizione ma con ginocchia a terra. Tieni comunque la schiena dritta." },
+        { nome:"Bicycle crunch", tag:"CORE", tagC:"#94a3b8", muscolo:"Addome · Obliqui", reps:"15 rip per lato",
+          come:"Sdraiata. Mani dietro la testa senza tirare il collo. Porta il gomito destro verso il ginocchio sinistro mentre l'altra gamba si allunga. Alterna lenta e controllata.",
+          alt:[
+            { nome:"Crunch obliquo", come:"Sdraiata. Porta il gomito destro verso il ginocchio sinistro e viceversa. Più semplice del bicycle ma stesso muscolo." },
+            { nome:"Russian twist senza peso", come:"Seduta con gambe piegate e piedi alzati da terra. Ruota il busto da destra a sinistra. Più di controllo che di velocità." }
+          ], semplificata:"Crunch normale — solleva solo le spalle da terra. Non tirare mai il collo con le mani." }
+      ]}
+    ]
+  },
+  {
+    id:1, tag:"MER", nome:"MERCOLEDÌ", emoji:"💪",
+    focus:"Braccia · Schiena · Spalle",
+    colore:"#3b82f6", giri:"3 serie · 45 sec riposo · leggero", durata:"~35 min",
+    recupero:45, recuperoMin:"45 SEC", recuperoLungo:60, recuperoMinLungo:"60 SEC",
+    blocchi:[
+      { id:"A", label:"ESERCIZIO 1", esercizi:[
+        { nome:"Flessioni su ginocchia", tag:"PETTO", tagC:"#a855f7", muscolo:"Petto · Tricipiti · Spalle", reps:"3 × 10 rip",
+          come:"Ginocchia a terra. Mani alla larghezza delle spalle. Abbassa lenta il petto verso il pavimento (2 sec), spingi su. Tieni i gomiti a 45° — non aperti. Esegui ogni ripetizione in modo controllato, senza rimbalzare.",
+          alt:[
+            { nome:"Flessioni a muro", come:"Appoggia le mani al muro. Piega i gomiti avvicinando il petto al muro e spingi indietro. Facilissimo per iniziare." },
+            { nome:"Flessioni su ginocchia mani alte", come:"Metti le mani su una sedia — invece che a terra. Meno peso sulle braccia, più facile da controllare." }
+          ], semplificata:"Flessioni a muro — mani al muro, corpo dritto, piega e spingi. Puoi farne quante vuoi senza fatica eccessiva." }
+      ]},
+      { id:"B", label:"ESERCIZIO 2", esercizi:[
+        { nome:"Rematore con manubrio su sedia (1–2 kg)", tag:"SCHIENA", tagC:"#3b82f6", muscolo:"Schiena · Bicipiti · Spalle posteriori", reps:"3 × 12 rip per braccio",
+          come:"Un ginocchio e la mano dello stesso lato appoggiate sulla sedia. Schiena parallela al pavimento. Con l'altro braccio, tieni il manubrio da 1–2 kg e tira il gomito verso il fianco — come se stessi avviando un motorino. Abbassa lenta. 12 ripetizioni, poi cambia braccio.",
+          alt:[
+            { nome:"Rematore con elastico seduta", come:"Seduta, elastico leggero sui piedi. Tira le due estremità verso i fianchi stringendo le scapole. Ancora più semplice." },
+            { nome:"Rematore due bracci piegata 1 kg", come:"In piedi piegata a 45°, un manubrio da 1 kg per mano. Tira entrambi verso i fianchi insieme. Abbassa lenta." }
+          ], semplificata:"Rematore elastico leggero seduta — metti un elastico sottile sui piedi e tira verso di te. Facilissimo e sicuro." }
+      ]},
+      { id:"C", label:"ESERCIZIO 3", esercizi:[
+        { nome:"Curl bicipiti con manubri 1–2 kg", tag:"BICIPITI", tagC:"#f97316", muscolo:"Bicipiti · Avambracci", reps:"3 × 12 rip",
+          come:"In piedi, manubri da 1–2 kg ai fianchi, palmi verso l'esterno. Alza lentamente le mani verso le spalle. Abbassa lenta (2 sec). Gomiti fermi ai fianchi — non dondolare il corpo. Senti la contrazione sul bicipite in cima al movimento.",
+          alt:[
+            { nome:"Curl con bottigliette d'acqua", come:"Bottiglie da 500 ml piene. Stessa tecnica. Perfetto se non hai manubri." },
+            { nome:"Curl martello 1 kg (presa neutra)", come:"Palmi verso il corpo durante tutto il movimento. Lavora anche gli avambracci." }
+          ], semplificata:"Curl senza peso — fai il movimento con le mani vuote per imparare la tecnica prima di aggiungere il peso." }
+      ]},
+      { id:"A", label:"ESERCIZIO 4", esercizi:[
+        { nome:"Alzate laterali 1 kg", tag:"SPALLE", tagC:"#a855f7", muscolo:"Spalle · Deltoide", reps:"3 × 12 rip",
+          come:"In piedi, manubri da 1 kg ai fianchi. Alza le braccia lateralmente fino all'altezza delle spalle — non oltre. Gomiti leggermente piegati. Abbassa lentissima (3 sec). Il peso leggero è quello giusto: è un esercizio di isolamento, non di forza.",
+          alt:[
+            { nome:"Alzate laterali seduta", come:"Stessa cosa ma seduta su sedia. Più stabile, riduce il dondolamento del busto." },
+            { nome:"Alzate con elastico", come:"Calpesta l'elastico con un piede. Tira su lateralmente. Resistenza leggera e progressiva." }
+          ], semplificata:"Alza le braccia con mani vuote — fai il movimento senza nulla per imparare il percorso." }
+      ]},
+      { id:"B", label:"ESERCIZIO 5", esercizi:[
+        { nome:"Kickback tricipiti 1–2 kg", tag:"TRICIPITI", tagC:"#3b82f6", muscolo:"Tricipiti", reps:"3 × 12 rip per braccio",
+          come:"Un ginocchio e una mano sulla sedia. Gomito alto vicino al fianco. Distendi l'avambraccio verso dietro fino a braccio teso, poi ripiega lenta. Solo l'avambraccio si muove — il gomito è fermo. Peso 1–2 kg. 12 ripetizioni, poi cambia braccio.",
+          alt:[
+            { nome:"Estensione sopra la testa 1 kg", come:"Tieni un manubrio da 1 kg con due mani sopra la testa. Piega i gomiti abbassando il peso dietro la nuca. Distendi su lentamente." },
+            { nome:"Dip su sedia semplice", come:"Seduta sul bordo della sedia, mani ai lati. Scivolati avanti e piega le braccia abbassando il corpo. Risali." }
+          ], semplificata:"Distensione tricipiti con elastico leggero fissato in alto — spingi verso il basso. Facilissimo da impostare." }
+      ]},
+      { id:"C", label:"ESERCIZIO 6", esercizi:[
+        { nome:"Superman", tag:"LOMBARI", tagC:"#f97316", muscolo:"Lombari · Schiena bassa · Glutei", reps:"3 × 12 rip",
+          come:"A terra pancia in giù. Braccia distese davanti. Alza insieme braccia, petto e gambe quanto riesci. Tieni 2 secondi in alto. Abbassa lenta. Ogni ripetizione è intenzionale — contrai i glutei mentre sali.",
+          alt:[
+            { nome:"Superman solo braccia", come:"Alza solo le braccia tenendo le gambe giù. Più semplice per la schiena." },
+            { nome:"Superman alternato (nuotatore)", come:"Alza braccio destro e gamba sinistra insieme, poi inverti. Come nuotare lentamente a terra." }
+          ], semplificata:"Alza solo le braccia tenendo le gambe ferme a terra. Molto più semplice e sicuro per iniziare." }
+      ]}
+    ]
+  },
+  {
+    id:2, tag:"VEN", nome:"VENERDÌ", emoji:"🔥",
+    focus:"Glutei · Core · Vita",
+    colore:"#f97316", giri:"3 giri", durata:"~45 min",
+    blocchi:[
+      { id:"A", label:"BLOCCO A", esercizi:[
+        { nome:"Hip thrust con elastico", tag:"GRANDE", tagC:"#a855f7", muscolo:"Glutei", reps:"20 rip",
+          come:"Spalle appoggiate alla sedia (parte alta schiena). Piedi a terra. Elastico sulle ginocchia. Abbassa il bacino verso terra e spingi forte in alto. Tieni 2 sec in cima.",
+          alt:[
+            { nome:"Hip thrust con manubrio", come:"Stessa posizione ma con un manubrio appoggiato sulle anche. Aggiunge resistenza. Usalo quando il peso corporeo non basta più." },
+            { nome:"Hip thrust un piede solo", come:"Stessa posizione ma una gamba tesa in aria. Solo la gamba a terra lavora. Isola completamente il gluteo. Molto più difficile." }
+          ], semplificata:"Ponte glutei normale — sdraiata a terra invece che con le spalle sulla sedia. Più facile e altrettanto efficace." },
+        { nome:"Squat sumo con manubrio", tag:"GRANDE", tagC:"#a855f7", muscolo:"Interno coscia · Glutei", reps:"15 rip",
+          come:"Piedi molto larghi, punte verso fuori a 45°. Tieni il manubrio con due mani tra le gambe. Scendi finché le cosce sono parallele al pavimento. Risali lenta.",
+          alt:[
+            { nome:"Squat sumo con pausa 3 sec", come:"Stesso movimento ma tieniti 3 secondi nella posizione più bassa. Molto più intenso. Senti bruciare interno coscia e glutei." },
+            { nome:"Squat normale con manubri", come:"Piedi alla larghezza delle spalle. Un manubrio in ogni mano. Più versatile se il sumo non è comodo." }
+          ], semplificata:"Squat sumo senza manubrio — impara prima la posizione dei piedi e la discesa corretta." },
+        { nome:"Step-up lento su sedia", tag:"GRANDE", tagC:"#a855f7", muscolo:"Gambe · Glutei", reps:"12 rip per gamba",
+          come:"Sali sulla sedia CON UNA GAMBA, lenta e controllata. Non saltare. Spingi col tallone della gamba sulla sedia. Scendi lenta. Sicuro per le caviglie se fatto senza impatto.",
+          alt:[
+            { nome:"Step-up con manubri lento", come:"Stesso esercizio con un manubrio in ogni mano. Più carico, stesso ritmo lento e controllato." },
+            { nome:"Affondo bulgaro su sedia", come:"Piede posteriore sulla sedia. Scendi e risali. Molto più difficile dello step-up." }
+          ], semplificata:"Step-up su un gradino basso (5-10 cm) invece della sedia — meno altezza, meno sforzo sulle caviglie." }
+      ]},
+      { id:"B", label:"BLOCCO B", esercizi:[
+        { nome:"Clamshell con elastico", tag:"PICCOLO", tagC:"#f59e0b", muscolo:"Gluteo medio", reps:"15 rip per lato",
+          come:"Sdraiata su un fianco. Ginocchia piegate a 90°. Elastico sopra le ginocchia. Apri il ginocchio superiore verso il soffitto come uno schiaccianoci. Torna lenta. Piedi uniti.",
+          alt:[
+            { nome:"Clamshell senza elastico", come:"Stesso movimento ma senza la resistenza. Più facile, ottimo per imparare l'attivazione del gluteo medio." },
+            { nome:"Fire hydrant in quadrupedia con elastico", come:"A quattro zampe. Elastico sopra le ginocchia. Apri il ginocchio di lato verso fuori. Torna lenta. Stessa zona muscolare." }
+          ], semplificata:"Clamshell senza elastico — conta 2 sec su e 2 sec giù per sentire il muscolo lavorare." },
+        { nome:"Leg curl con elastico sdraiata", tag:"PICCOLO", tagC:"#f59e0b", muscolo:"Femorali (retro coscia)", reps:"15 rip",
+          come:"Sdraiata a pancia in giù. Elastico intorno alle caviglie. Porta i talloni verso i glutei piegando le ginocchia. Torna lenta. Piega tutta la gamba.",
+          alt:[
+            { nome:"Romanian deadlift con manubri (leggeri)", come:"In piedi, manubri davanti alle cosce. Piega in avanti con la schiena dritta finché senti stiramento nel retro coscia. Risali lenta." },
+            { nome:"Good morning corpo libero", come:"In piedi, mani dietro la testa. Abbassa il busto in avanti a 45° con le gambe semi-tese. Senti il retro coscia. Risali lenta." }
+          ], semplificata:"Leg curl con elastico leggero — usa la resistenza più bassa del set di elastici." }
+      ]},
+      { id:"C", label:"BLOCCO C", esercizi:[
+        { nome:"Crunch con twist", tag:"CORE", tagC:"#94a3b8", muscolo:"Addome · Vita", reps:"15 rip per lato",
+          come:"Sdraiata. Sali nel crunch e nella posizione alta ruota il busto verso destra. Abbassa. Poi sali e ruota verso sinistra. Abbassa. Lavora addome e vita insieme.",
+          alt:[
+            { nome:"Russian twist con manubrio leggero", come:"Seduta, gambe piegate, piedi alzati. Tieni un manubrio leggero (2 kg) e ruota da destra a sinistra toccando il pavimento." },
+            { nome:"Plank laterale", come:"Su un fianco sul gomito. Fianchi sollevati. Corpo in linea. 25 sec per lato. Lavora obliqui e vita." }
+          ], semplificata:"Crunch normale senza la rotazione — solo su e giù. Aggiungi la rotazione quando ti senti pronta." },
+        { nome:"Marching in place con ginocchia alte", tag:"CARDIO", tagC:"#ef4444", muscolo:"Cardio · Gambe (no impatto)", reps:"45 sec",
+          come:"Cammina sul posto alzando le ginocchia il più possibile. Braccia che si muovono opposti alle gambe. Lenta e controllata. NESSUN IMPATTO sulle caviglie — il piede si appoggia piano.",
+          alt:[
+            { nome:"Step laterale con elastico", come:"Elastico sulle caviglie. Passi laterali aperti di lato, poi chiudi. 15 passi a destra, 15 a sinistra. Basso impatto e ottimo per esterno coscia." },
+            { nome:"Seated knee raises (seduta)", come:"Seduta sulla sedia, solleva le ginocchia verso il petto alternativamente. Veloce quanto vuoi. Zero impatto sulle caviglie. Ottimo cardio seduto." }
+          ], semplificata:"Marching lento — stesso movimento ma più lento. L'importante è mantenere le ginocchia alte." }
+      ]}
+    ]
+  },
+  {
+    id:3, tag:"DOM", nome:"DOMENICA", emoji:"⚡",
+    focus:"Full Body · Bruciagrassi (no impatto)",
+    colore:"#a855f7", giri:"2–3 giri", durata:"~40 min",
+    blocchi:[
+      { id:"A", label:"BLOCCO A", esercizi:[
+        { nome:"Squat con manubri + pausa", tag:"GRANDE", tagC:"#a855f7", muscolo:"Gambe · Glutei", reps:"15 rip",
+          come:"Scendi nello squat, tieniti 2 sec in basso, risali lenta. Il peso dei manubri e la pausa rendono questo esercizio molto più efficace per bruciare calorie.",
+          alt:[
+            { nome:"Squat sumo con manubrio + pausa", come:"Stessa logica ma con i piedi larghi. Cambia la zona muscolare coinvolta. Ottimo per alternare." },
+            { nome:"Squat pulsante", come:"Scendi nello squat e fai piccoli movimenti su e giù di pochi centimetri (pulse). 20 rip. Brucia tantissimo." }
+          ], semplificata:"Squat a corpo libero con pausa — senza manubri ma con i 2 sec in basso." },
+        { nome:"Flessioni su ginocchia + Rematore manubri (superserie)", tag:"GRANDE", tagC:"#a855f7", muscolo:"Petto · Schiena", reps:"10 fless. + 10 rematore",
+          come:"Fai 10 flessioni su ginocchia, poi immediatamente senza pausa 10 rematore con manubri piegata a 45°. I due esercizi lavorano muscoli opposti (petto e schiena).",
+          alt:[
+            { nome:"Flessioni a muro + Rematore elastico", come:"Per chi ha bisogno di una versione più leggera. Flessioni al muro invece che a terra, rematore con elastico." }
+          ], semplificata:"Fai i due esercizi separati con 10 sec di pausa tra uno e l'altro." },
+        { nome:"Hip thrust con elastico (veloce)", tag:"GRANDE", tagC:"#a855f7", muscolo:"Glutei · Full body", reps:"20 rip",
+          come:"Spalle sulla sedia. Elastico sulle ginocchia. Spingi il bacino su e giù a ritmo più veloce del solito. Non fermarti, tieni il ritmo per tutto il tempo.",
+          alt:[
+            { nome:"Hip thrust con manubrio ritmo alto", come:"Stesso ma con un manubrio leggero. Aumenta il lavoro metabolico." }
+          ], semplificata:"Ponte glutei normale a ritmo costante." }
+      ]},
+      { id:"B", label:"BLOCCO B", esercizi:[
+        { nome:"Curl bicipiti + Alzate laterali (superserie)", tag:"PICCOLO", tagC:"#f59e0b", muscolo:"Braccia · Spalle", reps:"12 curl + 12 alzate",
+          come:"12 curl bicipiti con manubri, poi senza pausa 12 alzate laterali. Braccia e spalle insieme. Veloce e brucia molte calorie.",
+          alt:[
+            { nome:"Curl + alzate con elastico", come:"Stessa superserie ma usando l'elastico invece dei manubri. Più morbido sui polsi." }
+          ], semplificata:"I due esercizi separati con 10 sec di pausa." },
+        { nome:"Step laterale con elastico", tag:"CARDIO", tagC:"#ef4444", muscolo:"Cardio · Esterno coscia (no impatto)", reps:"45 sec",
+          come:"Elastico sulle caviglie o sulle ginocchia. Passi larghi di lato — 2 a destra, 2 a sinistra. Tieniti leggermente piegata come in uno squat basso. Nessun impatto.",
+          alt:[
+            { nome:"Marching in place veloce", come:"Cammina sul posto più veloce che puoi alzando le ginocchia alte. Cardio intenso senza impatto." },
+            { nome:"Seated knee raises rapide", come:"Seduta sulla sedia. Alza le ginocchia velocissimo alternativamente. Cardio da seduta, zero impatto caviglie." }
+          ], semplificata:"Step laterale senza elastico — stesso movimento ma senza resistenza." }
+      ]},
+      { id:"C", label:"BLOCCO C", esercizi:[
+        { nome:"Plank + sollevamento gamba alternato", tag:"CORE", tagC:"#94a3b8", muscolo:"Core · Glutei", reps:"10 rip per gamba",
+          come:"In posizione di plank sulle mani. Alza una gamba verso il soffitto tenendola dritta. Abbassa lenta. Alterna. I fianchi non devono ruotare.",
+          alt:[
+            { nome:"Plank statico con contrazione glutei", come:"Plank normale ma ogni 5 secondi stringi forte i glutei per 3 sec. Lavora core e glutei insieme in modo isometrico." },
+            { nome:"Plank laterale con sollevamento fianchi", come:"Su un fianco sul gomito. Abbassa i fianchi verso terra e risali. 10 rip per lato." }
+          ], semplificata:"Plank statico 40 sec — senza il movimento della gamba. Più facile da mantenere." },
+        { nome:"Bicycle crunch veloce", tag:"CORE", tagC:"#94a3b8", muscolo:"Addome · Obliqui · Cardio", reps:"20 rip per lato",
+          come:"Sdraiata. Bicycle crunch al ritmo più veloce che riesci mantenendo la tecnica corretta. Cardio e core insieme. Non tirare il collo.",
+          alt:[
+            { nome:"Russian twist con manubrio leggero", come:"Seduta, piedi alzati. Manubrio leggero in mano. Ruota veloce da destra a sinistra. Intenso per la vita." },
+            { nome:"Crunch obliquo veloce", come:"Porta il gomito al ginocchio opposto veloce. Più semplice del bicycle ma stesso effetto cardio+core." }
+          ], semplificata:"Bicycle crunch lento — conta 2 sec per ogni lato. Priorità alla tecnica." }
+      ]}
+    ]
+  }
+];
+
+const attrezzi = [
+  { emoji:"🟡", nome:"Elastici resistenza variabile (set 3)", prezzo:"~20€", quando:"Priorità 1 — subito", perche:"Fondamentali per i glutei. Kickback, clamshell, step laterale, hip thrust. Compra un set da 3 resistenze: leggero, medio, forte." },
+  { emoji:"🏋️", nome:"Manubri leggeri 1–3 kg", prezzo:"~20–35€", quando:"Già disponibili ✓", perche:"Essenziali. Braccia, spalle, rematore. Inizia con 1–2 kg, poi passa a 3 kg quando gli esercizi diventano facili." },
+  { emoji:"🔴", nome:"Elastico corto (mini band)", prezzo:"~8–15€", quando:"Da comprare — priorità alta", perche:"Indispensabile per i glutei: ponte con elastico, clamshell, step laterale. Prendi un kit da 3 con resistenze diverse (leggera, media, forte)." },
+  { emoji:"🟡", nome:"Elastico lungo (fascia o tubo)", prezzo:"~10–15€", quando:"Da comprare — utile", perche:"Alternativa al rematore, curl bicipiti, alzate spalle. Fissalo a una porta. Molto versatile per tutto il corpo." },
+  { emoji:"🟦", nome:"Tappetino yoga", prezzo:"~15€", quando:"Già disponibile ✓", perche:"Indispensabile. Tutti gli esercizi a terra si fanno sul tappetino. Schiena e ginocchia ringraziano." },
+  { emoji:"🪑", nome:"Sedia robusta (già in casa)", prezzo:"0€", quando:"Già disponibile ✓", perche:"Rematore con manubrio, kickback tricipiti, step-up. Assicurati che non scivoli sul pavimento." }
+];
+
+const pasti = [
+  { pasto:"Colazione", emoji:"🌅", orario:"7:00–9:00", colore:"#ec4899",
+    idee:[
+      { nome:"Yogurt greco + avena + frutti rossi", macro:"~22g prot.", note:"200g yogurt greco magro. 50g avena. Frutti rossi freschi o congelati. Sano, sazio, poche calorie." },
+      { nome:"Uova strapazzate 2 + pane integrale", macro:"~24g prot.", note:"2 uova. Pane integrale. Evita il burro, usa spray antiaderente." },
+      { nome:"Frullato proteico: yogurt + frutta + avena", macro:"~20g prot.", note:"Frulla 150g yogurt greco + 1 banana piccola + 40g avena + latte scremato. Velocissimo." }
+    ]},
+  { pasto:"Spuntino mattina", emoji:"🍎", orario:"10:30–11:00", colore:"#22c55e",
+    idee:[
+      { nome:"Frutta fresca + noci (piccolo pugno)", macro:"~5g prot.", note:"Mela o pera + 5-6 noci. Spuntino leggero. Non saltarlo o avrai fame al pranzo." },
+      { nome:"Ricotta 100g + miele + cannella", macro:"~13g prot.", note:"Ricotta magra. Pochissimo miele. La cannella aiuta il metabolismo." },
+      { nome:"Crackers integrali + hummus", macro:"~6g prot.", note:"3-4 crackers integrali + 2 cucchiai di hummus. Sazio e sano." }
+    ]},
+  { pasto:"Pranzo", emoji:"☀️", orario:"12:30–14:00", colore:"#3b82f6",
+    idee:[
+      { nome:"Pollo alla piastra + verdure + riso integrale", macro:"~38g prot.", note:"150g pollo. 60g riso integrale crudo. Verdure abbondanti. Il pasto base per dimagrire." },
+      { nome:"Insalata proteica: tonno + uova + ceci", macro:"~35g prot.", note:"120g tonno + 2 uova sode + 60g ceci. Olio oliva, limone. Zero cottura, preparazione 5 minuti." },
+      { nome:"Pasta integrale + verdure + olio", macro:"~20g prot.", note:"70g pasta integrale (meno della pasta normale). Molte verdure saltate. Senza condimenti pesanti." }
+    ]},
+  { pasto:"Merenda", emoji:"🍫", orario:"16:00–17:00", colore:"#f97316",
+    idee:[
+      { nome:"Yogurt greco 150g + frutta secca", macro:"~16g prot.", note:"Il più semplice e efficace. Occhio alle porzioni di frutta secca (max 15g)." },
+      { nome:"Frullato banana + latte scremato", macro:"~10g prot.", note:"1 banana piccola + 200ml latte scremato. Se ti alleni nel pomeriggio, mangiatela 30 min prima." },
+      { nome:"2 gallette di riso + ricotta light", macro:"~8g prot.", note:"Spuntino leggerissimo. Ottimo se il pranzo era abbondante." }
+    ]},
+  { pasto:"Cena", emoji:"🌙", orario:"19:00–21:00", colore:"#a855f7",
+    idee:[
+      { nome:"Pesce bianco + verdure + patate dolci", macro:"~32g prot.", note:"150g merluzzo o branzino. Verdure al vapore o al forno. 80g patate dolci. Leggero e sazio." },
+      { nome:"Zuppa di legumi + pane integrale", macro:"~18g prot.", note:"Lenticchie, ceci o fagioli. Abbondante. 1 fetta pane integrale. Economico e nutriente." },
+      { nome:"Frittata 3 uova + insalata abbondante", macro:"~22g prot.", note:"Cena veloce. Frittata con verdure dentro. Insalata grande come contorno." }
+    ]}
+];
+
+let state = { tab:"circuito", giorno:0, aperto:null, pasto:null };
+
+let timerInterval = null;
+let timerState = { active: false, secondsLeft: 0, type: '' };
+let currentTimerKey = null;
+
+function startTimer(seconds, timerKey) {
+  if (timerInterval) clearInterval(timerInterval);
+  document.querySelectorAll('[id^="itimer-"]').forEach(el => { el.style.display='none'; el.innerHTML=''; });
+  currentTimerKey = timerKey;
+  timerState = { active: true, secondsLeft: seconds };
+  timerInterval = setInterval(() => {
+    timerState.secondsLeft--;
+    updateTimerUI();
+    if (timerState.secondsLeft <= 0) {
+      clearInterval(timerInterval);
+      timerState.active = false;
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      updateTimerUI();
+    }
+  }, 1000);
+  updateTimerUI();
+}
+
+function stopTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerState = { active: false, secondsLeft: 0 };
+  if (currentTimerKey) {
+    const el = document.getElementById('itimer-' + currentTimerKey);
+    if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+    currentTimerKey = null;
+  }
+}
+
+function updateTimerUI() {
+  if (!currentTimerKey) return;
+  const el = document.getElementById('itimer-' + currentTimerKey);
+  if (!el) return;
+  el.style.display = 'block';
+  if (!timerState.active && timerState.secondsLeft <= 0) {
+    el.innerHTML = `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#14532d22;border:1px solid #22c55e44;border-radius:8px;margin-top:2px;">
+      <span style="font-size:16px;">✅</span>
+      <span style="font-size:12px;font-weight:700;color:#22c55e;flex:1;">Riposo completato!</span>
+      <button onclick="stopTimer()" style="background:none;border:1px solid #22c55e55;color:#22c55e;padding:3px 10px;border-radius:5px;font-size:11px;font-weight:700;">OK ✓</button>
+    </div>`;
+    return;
+  }
+  const m = Math.floor(timerState.secondsLeft / 60);
+  const s = timerState.secondsLeft % 60;
+  const timeStr = m > 0 ? m+':'+String(s).padStart(2,'0') : timerState.secondsLeft+'s';
+  el.innerHTML = `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#ef444411;border:1px solid #ef444433;border-radius:8px;margin-top:2px;">
+    <span style="font-size:22px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:#ef4444;min-width:52px;">${timeStr}</span>
+    <span style="font-size:10px;color:#6b7280;flex:1;letter-spacing:1px;">RIPOSO</span>
+    <button onclick="event.stopPropagation();stopTimer()" style="background:none;border:1px solid #374151;color:#6b7280;padding:3px 8px;border-radius:5px;font-size:11px;">✕ salta</button>
+  </div>`;
+}
+
+function setState(updates) { Object.assign(state, updates); render(); }
+
+const bloccoColori = {
+  A: { bg:"#1a0a2e", border:"#581c8844", label:"#a855f7" },
+  B: { bg:"#0a1020", border:"#1e3a8a44", label:"#3b82f6" },
+  C: { bg:"#1a100a", border:"#7c2d1244", label:"#f97316" }
+};
+
+function render() { document.getElementById('app').innerHTML = buildHTML(); attachEvents(); }
+
+function buildHTML() {
+  const g = giorni[state.giorno];
+  return `
+  <div style="font-family:'Inter',system-ui,sans-serif;background:#0c0c0c;min-height:100vh;color:#fff;max-width:480px;margin:0 auto;">
+    <div style="background:#111827;padding:20px 18px 16px;border-bottom:1px solid #1f2937;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:3px;color:#374151;margin-bottom:5px;">SCHEDA CIRCUITO · 3+2+2</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:900;letter-spacing:-0.5px;">La Ragazza 🌸</div>
+      <div style="font-size:12px;color:#4b5563;margin-top:2px;">18–25 anni · 175 cm · 78–80 kg · Con base</div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
+        ${["🏠 Casa","⏱ ~45 min","🔥 Dimagrire + Tono","🦵 No impatto caviglie"].map(t=>`<span style="background:#1f2937;font-size:10px;padding:3px 10px;border-radius:20px;color:#6b7280;">${t}</span>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;border-bottom:1px solid #1f2937;background:#0c0c0c;position:sticky;top:0;z-index:10;">
+      ${[{id:"circuito",l:"Circuito",e:"⚡"},{id:"attrezzi",l:"Attrezzi",e:"🏋️"},{id:"cibo",l:"Alimentazione",e:"🥗"}].map(t=>
+        `<button data-tab="${t.id}" style="flex:1;padding:12px 4px;background:none;border:none;border-bottom:${state.tab===t.id?"2px solid #ec4899":"2px solid transparent"};color:${state.tab===t.id?"#fff":"#4b5563"};">
+          <div style="font-size:16px;">${t.e}</div>
+          <div style="font-size:10px;font-weight:700;margin-top:2px;">${t.l}</div>
+        </button>`).join('')}
+    </div>
+    ${state.tab === "circuito" ? buildCircuito(g) : ""}
+    ${state.tab === "attrezzi" ? buildAttrezzi() : ""}
+    ${state.tab === "cibo" ? buildCibo() : ""}
+  </div>`;
+}
+
+function buildCircuito(g) {
+  const settimana = [
+    {tag:"LUN",tipo:"Glutei · Gambe · Core",emoji:"🦵",attivo:true,c:"#ec4899"},
+    {tag:"MAR",tipo:"Riposo — cammina piano o stretching",emoji:"😴",attivo:false,c:""},
+    {tag:"MER",tipo:"Braccia · Schiena · Spalle",emoji:"💪",attivo:true,c:"#3b82f6"},
+    {tag:"GIO",tipo:"Riposo — cammina piano o stretching",emoji:"😴",attivo:false,c:""},
+    {tag:"VEN",tipo:"Glutei · Core · Vita",emoji:"🔥",attivo:true,c:"#f97316"},
+    {tag:"SAB",tipo:"Riposo — cammina piano o stretching",emoji:"😴",attivo:false,c:""},
+    {tag:"DOM",tipo:"Full Body · Bruciagrassi (no impatto)",emoji:"⚡",attivo:true,c:"#a855f7"}
+  ];
+  let esN = 0;
+  return `<div style="padding:14px 18px 0;">
+    <div style="background:#111827;border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+      <div style="font-size:9px;color:#374151;letter-spacing:2px;margin-bottom:8px;">STRUTTURA DI OGNI GIRO</div>
+      <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
+        ${[{t:"Es.1",c:"#a855f7"},{t:"5s",c:"#374151"},{t:"Es.2",c:"#a855f7"},{t:"5s",c:"#374151"},{t:"Es.3",c:"#a855f7"},{t:"30s🔴",c:"#ef4444"},
+           {t:"Es.4",c:"#3b82f6"},{t:"5s",c:"#374151"},{t:"Es.5",c:"#3b82f6"},{t:"30s🔴",c:"#ef4444"},
+           {t:"Es.6",c:"#f97316"},{t:"5s",c:"#374151"},{t:"Es.7",c:"#f97316"},{t:"2min⏸",c:"#a855f7"}]
+          .map(i=>`<span style="font-size:9px;font-weight:800;color:${i.c};padding:2px 5px;background:${i.c}22;border-radius:4px;">${i.t}</span>`).join('')}
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+        ${[{c:"#a855f7",t:"GRANDE"},{c:"#f59e0b",t:"PICCOLO"},{c:"#94a3b8",t:"CORE"},{c:"#ef4444",t:"CARDIO"}]
+          .map(l=>`<div style="display:flex;align-items:center;gap:4px;"><div style="width:6px;height:6px;border-radius:50%;background:${l.c};"></div><span style="font-size:9px;color:#374151;">${l.t}</span></div>`).join('')}
+      </div>
+    </div>
+    <div style="font-size:9px;letter-spacing:2px;color:#374151;margin-bottom:8px;">SCEGLI IL GIORNO</div>
+    <div style="display:flex;gap:6px;margin-bottom:12px;">
+      ${giorni.map((gi,i)=>
+        `<button data-giorno="${i}" class="giorno-btn" style="flex:1;padding:11px 4px;border-radius:10px;border:2px solid ${state.giorno===i?gi.colore:"#1f2937"};background:${state.giorno===i?gi.colore+"22":"#161616"};text-align:center;">
+          <div style="font-size:18px;">${gi.emoji}</div>
+          <div style="font-size:9px;font-weight:800;color:${state.giorno===i?gi.colore:"#374151"};margin-top:4px;">${gi.tag}</div>
+        </button>`).join('')}
+    </div>
+    <div style="background:${g.colore}22;border:1px solid ${g.colore}44;border-radius:12px;padding:13px 15px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:16px;font-weight:900;">${g.nome}</div>
+        <div style="font-size:12px;color:${g.colore};margin-top:2px;font-weight:600;">${g.focus}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:13px;font-weight:800;color:${g.colore};">⏱ ${g.durata}</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:2px;">${g.giri}</div>
+      </div>
+    </div>
+    <div style="font-size:9px;letter-spacing:2px;color:#374151;margin-bottom:10px;">SEQUENZA ESERCIZI</div>
+    ${g.blocchi.map((blocco, bi) => {
+      const bc = bloccoColori[blocco.id];
+      const isUltimoB = bi === g.blocchi.length - 1;
+      return `
+      <div style="margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <div style="background:${bc.label}22;border:1px solid ${bc.label}44;border-radius:6px;padding:3px 10px;font-size:10px;font-weight:800;color:${bc.label};">${blocco.label}</div>
+        </div>
+        <div style="background:${bc.bg};border:1px solid ${bc.border};border-radius:12px;overflow:hidden;">
+          ${blocco.esercizi.map((es, ei) => {
+            esN++;
+            const key = `${state.giorno}-${blocco.id}-${ei}`;
+            const isAp = state.aperto === key;
+            const isUltimoE = ei === blocco.esercizi.length - 1;
+            const num = esN;
+            return `
+            <div>
+              <button data-key="${key}" class="es-btn" style="width:100%;padding:13px 14px;background:none;border:none;border-bottom:${!isUltimoE?`1px solid ${bc.border}`:"none"};display:flex;align-items:center;gap:10px;text-align:left;">
+                <div style="width:24px;height:24px;border-radius:6px;background:${bc.label}33;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:${bc.label};flex-shrink:0;">${num}</div>
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap;">
+                    <span style="font-size:13px;font-weight:700;color:#e2e8f0;">${es.nome}</span>
+                    <span style="background:${es.tagC}22;color:${es.tagC};font-size:8px;font-weight:800;padding:1px 5px;border-radius:3px;flex-shrink:0;">${es.tag}</span>
+                  </div>
+                  <div style="font-size:10px;color:#374151;margin-bottom:4px;">${es.muscolo}</div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="background:${bc.label};color:#000;font-size:10px;font-weight:900;padding:2px 8px;border-radius:4px;">${es.reps}</span>
+                    ${isUltimoE
+                      ? `<span style="font-size:10px;font-weight:700;color:${isUltimoB?"#a855f7":"#ef4444"};">${isUltimoB?"→ ⏸ "+(g.recuperoMinLungo||"2 MIN"):"→ 🔴 "+(g.recuperoMin||"30 SEC")}</span><button onclick="event.stopPropagation();startTimer(${isUltimoB?(g.recuperoLungo||120):(g.recupero||30)},'${key}')" style="margin-left:5px;background:${isUltimoB?'#a855f722':'#ef444422'};border:1px solid ${isUltimoB?'#a855f766':'#ef444466'};color:${isUltimoB?'#a855f7':'#ef4444'};font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;">▶</button>`
+                      : `<span style="font-size:10px;color:#374151;">→ 5 sec →</span>`}
+                  </div>
+                </div>
+                <span style="color:${isAp?bc.label:"#374151"};font-size:13px;flex-shrink:0;">${isAp?"▲":"▼"}</span>
+              </button>
+              ${isAp ? `
+              <div class="es-detail" style="padding:0 14px 14px;border-top:1px solid ${bc.border};">
+                <div style="background:#0c0c0c;border-left:3px solid ${bc.label};border-radius:0 8px 8px 0;padding:10px 12px;margin-top:10px;">
+                  <div style="font-size:9px;font-weight:800;color:${bc.label};letter-spacing:2px;margin-bottom:4px;">COME SI FA</div>
+                  <div style="font-size:12px;color:#94a3b8;line-height:1.6;">${es.come}</div>
+                </div>
+                <div style="margin-top:10px;">
+                  <div style="font-size:9px;font-weight:800;color:#ec4899;letter-spacing:2px;margin-bottom:6px;">🔄 VARIANTI — esercizi alternativi di qualità</div>
+                  ${es.alt.map(v=>`
+                    <div style="background:#0c0c0c;border:1px solid ${bc.border};border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+                      <div style="font-size:12px;font-weight:700;color:#e2e8f0;margin-bottom:4px;">${v.nome}</div>
+                      <div style="font-size:11px;color:#6b7280;line-height:1.5;">${v.come}</div>
+                    </div>`).join('')}
+                </div>
+                <div style="background:#1a0f00;border:1px solid #78350f55;border-radius:8px;padding:10px 12px;margin-top:2px;display:flex;gap:10px;align-items:flex-start;">
+                  <span style="font-size:16px;flex-shrink:0;">⚡</span>
+                  <div>
+                    <div style="font-size:9px;font-weight:800;color:#f59e0b;letter-spacing:2px;margin-bottom:3px;">SE NON RIESCI ANCORA</div>
+                    <div style="font-size:11px;color:#fbbf24;line-height:1.5;">${es.semplificata}</div>
+                  </div>
+                </div>
+              </div>` : ""}
+              <div id="itimer-${key}" style="display:none;padding:0 10px 6px;"></div>
+            </div>`;
+          }).join('')}
+        </div>
+        ${!isUltimoB ? `
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;margin-top:4px;">
+          <div style="flex:1;height:1px;background:#ef444430;"></div>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+            <span style="font-size:11px;font-weight:800;color:#ef4444;white-space:nowrap;">🔴 ${g.recuperoMin||"30 SEC"} RIPOSO</span>
+            <button onclick="event.stopPropagation();startTimer(${g.recupero||30},'blk-${bi}')" style="background:#ef444422;border:1px solid #ef444466;color:#ef4444;font-size:9px;font-weight:800;padding:3px 8px;border-radius:5px;">▶ AVVIA</button>
+          </div>
+          <div style="flex:1;height:1px;background:#ef444430;"></div>
+        </div>
+        <div id="itimer-blk-${bi}" style="display:none;padding:0 4px 4px;"></div>` : ""}
+      </div>`;
+    }).join('')}
+    <div style="background:#120a1e;border:1px solid #581c8766;border-radius:12px;padding:14px;margin-top:6px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:28px;">⏸</span>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:900;color:#a855f7;">2 MINUTI DI RIPOSO</div>
+          <div style="font-size:11px;color:#6b7280;margin-top:3px;">Poi ricomincia dall'esercizio 1 per il giro successivo</div>
+        </div>
+        <button onclick="startTimer(120,'lungo')" style="background:#a855f722;border:1px solid #a855f766;color:#a855f7;font-size:10px;font-weight:800;padding:7px 12px;border-radius:8px;flex-shrink:0;">▶ AVVIA</button>
+      </div>
+      <div id="timer-bar" style="display:none;margin-top:10px;"></div>
+    </div>
+    <div style="margin-top:16px;">
+      <div style="font-size:9px;letter-spacing:2px;color:#374151;margin-bottom:8px;">PIANO SETTIMANALE</div>
+      <div style="background:#161616;border:1px solid #1f2937;border-radius:12px;overflow:hidden;">
+        ${settimana.map((r,i)=>
+          `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:${i<6?"1px solid #0c0c0c":"none"};background:${r.attivo?r.c+"0a":"transparent"};">
+            <div style="width:34px;height:34px;border-radius:8px;background:${r.attivo?r.c+"22":"#0c0c0c"};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <span style="font-size:15px;">${r.emoji}</span>
+            </div>
+            <div style="flex:1;">
+              <span style="font-size:11px;font-weight:800;color:${r.attivo?r.c:"#1f2937"};">${r.tag}  </span>
+              <span style="font-size:11px;color:${r.attivo?"#6b7280":"#1f2937"};">— ${r.tipo}</span>
+            </div>
+            ${r.attivo?`<span style="background:${r.c}22;color:${r.c};font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;">ALLENA</span>`:""}
+          </div>`).join('')}
+      </div>
+    </div>
+    <div style="height:24px;"></div>
+  </div>`;
+}
+
+function buildAttrezzi() {
+  return `<div style="padding:16px 18px;">
+    <div style="background:#1a0a2e;border:1px solid #581c8844;border-radius:12px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:800;color:#a855f7;margin-bottom:4px;">💶 Budget extra da spendere</div>
+      <div style="font-size:24px;font-weight:900;">~20€</div>
+      <div style="font-size:11px;color:#4b5563;margin-top:4px;">Ha già quasi tutto. Serve solo il set di elastici — sono il suo attrezzo principale.</div>
+    </div>
+    ${attrezzi.map(a=>`
+      <div style="background:#161616;border:1px solid #1f2937;border-radius:12px;padding:14px;margin-bottom:8px;display:flex;gap:14px;align-items:flex-start;">
+        <div style="font-size:28px;flex-shrink:0;">${a.emoji}</div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div style="font-size:14px;font-weight:700;">${a.nome}</div>
+            <div style="font-size:14px;font-weight:900;color:#22c55e;flex-shrink:0;margin-left:8px;">${a.prezzo}</div>
+          </div>
+          <div style="display:inline-block;background:#1f2937;font-size:9px;font-weight:700;color:#6b7280;padding:2px 8px;border-radius:4px;margin-top:5px;">${a.quando}</div>
+          <div style="font-size:11px;color:#4b5563;margin-top:6px;line-height:1.5;">${a.perche}</div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+
+function buildCibo() {
+  return `<div style="padding:16px 18px;">
+    <div style="background:#111827;border:1px solid #1f2937;border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:800;color:#6b7280;letter-spacing:2px;margin-bottom:12px;">OBIETTIVI GIORNALIERI — DIMAGRIMENTO + TONO</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        ${[{label:"Calorie",val:"1.700–1.900",unit:"kcal/giorno",colore:"#ec4899",note:"Deficit moderato per perdere grasso"},
+           {label:"Proteine",val:"120–140",unit:"g/giorno",colore:"#22c55e",note:"~1.6g per kg — preserva il muscolo"},
+           {label:"Carboidrati",val:"180–220",unit:"g/giorno",colore:"#3b82f6",note:"Preferisci integrali e a basso IG"},
+           {label:"Grassi",val:"55–70",unit:"g/giorno",colore:"#f97316",note:"Olio oliva, avocado, noci, pesce"}]
+          .map(m=>`
+          <div style="background:#0c0c0c;border:1px solid ${m.colore}33;border-radius:10px;padding:12px;">
+            <div style="font-size:10px;color:#4b5563;margin-bottom:4px;">${m.label}</div>
+            <div style="font-size:16px;font-weight:900;color:${m.colore};">${m.val}</div>
+            <div style="font-size:10px;color:#374151;margin-top:2px;">${m.unit}</div>
+            <div style="font-size:10px;color:#374151;margin-top:5px;line-height:1.4;">${m.note}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div style="font-size:9px;letter-spacing:2px;color:#374151;margin-bottom:10px;">IDEE PER OGNI PASTO — tocca per aprire</div>
+    ${pasti.map((p,pi)=>{
+      const isAp = state.pasto === pi;
+      return `
+      <div style="background:#161616;border:1px solid ${isAp?p.colore+"66":"#1f2937"};border-radius:12px;margin-bottom:8px;overflow:hidden;">
+        <button data-pasto="${pi}" style="width:100%;padding:14px 16px;background:none;border:none;display:flex;align-items:center;gap:12px;text-align:left;">
+          <div style="width:40px;height:40px;border-radius:10px;background:${p.colore}22;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${p.emoji}</div>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:800;color:#f1f5f9;">${p.pasto}</div>
+            <div style="font-size:11px;color:#4b5563;margin-top:2px;">⏰ ${p.orario}</div>
+          </div>
+          <span style="color:${isAp?p.colore:"#374151"};font-size:14px;flex-shrink:0;">${isAp?"▲":"▼"}</span>
+        </button>
+        ${isAp ? `
+        <div style="padding:0 16px 14px;border-top:1px solid #1f2937;">
+          <div style="font-size:9px;font-weight:800;color:#374151;letter-spacing:2px;margin:12px 0 8px;">3 IDEE — scegli quella che hai in casa</div>
+          ${p.idee.map(idea=>`
+            <div style="background:#0c0c0c;border:1px solid ${p.colore}33;border-radius:10px;padding:12px;margin-bottom:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                <div style="font-size:13px;font-weight:700;color:#e2e8f0;flex:1;">${idea.nome}</div>
+                <span style="background:${p.colore}22;color:${p.colore};font-size:10px;font-weight:800;padding:2px 8px;border-radius:5px;flex-shrink:0;">${idea.macro}</span>
+              </div>
+              <div style="font-size:11px;color:#4b5563;margin-top:6px;line-height:1.4;">${idea.note}</div>
+            </div>`).join('')}
+        </div>` : ""}
+      </div>`;
+    }).join('')}
+    <div style="background:#0a1f14;border:1px solid #14532d55;border-radius:12px;padding:14px;margin-top:4px;">
+      <div style="font-size:10px;font-weight:800;color:#22c55e;letter-spacing:1px;margin-bottom:8px;">📌 LE 3 REGOLE BASE PER DIMAGRIRE SANO</div>
+      ${["Proteine ad ogni pasto — mantengono il muscolo mentre perdi grasso. Senza proteine dimagrisci ma perdi anche tono.",
+         "Non eliminare i carboidrati — riducili e scegli quelli integrali. I carbo danno energia per allenarti.",
+         "Bevi 2 litri d'acqua al giorno — l'acqua aiuta il metabolismo. Spesso la fame è sete mascherata."]
+        .map((r,i)=>`
+        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:${i<2?"1px solid #1f2937":"none"};">
+          <span style="color:#22c55e;font-size:12px;flex-shrink:0;margin-top:1px;">✓</span>
+          <span style="font-size:11px;color:#4b5563;line-height:1.5;">${r}</span>
+        </div>`).join('')}
+    </div>
+    <div style="height:24px;"></div>
+  </div>`;
+}
+
+function attachEvents() {
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>setState({tab:b.dataset.tab,aperto:null,pasto:null}));
+  document.querySelectorAll('[data-giorno]').forEach(b=>b.onclick=()=>setState({giorno:parseInt(b.dataset.giorno),aperto:null}));
+  document.querySelectorAll('[data-key]').forEach(b=>b.onclick=()=>setState({aperto:state.aperto===b.dataset.key?null:b.dataset.key}));
+  document.querySelectorAll('[data-pasto]').forEach(b=>b.onclick=()=>setState({pasto:state.pasto===parseInt(b.dataset.pasto)?null:parseInt(b.dataset.pasto)}));
+}
+
+render();
+</script>
+</body>
+</html>

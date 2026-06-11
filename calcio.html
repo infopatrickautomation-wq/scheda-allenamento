@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scheda di Gio ⚽</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #0c0c0c; color: #fff; max-width: 480px; margin: 0 auto; min-height: 100vh; }
+  button { cursor: pointer; font-family: inherit; }
+  .es-detail { animation: slideDown 0.25s ease-out; overflow: hidden; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  .tab-content { animation: fadeIn 0.2s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  button:active { transform: scale(0.97); }
+  @media (hover: hover) { .es-btn:hover { background: rgba(255,255,255,0.03) !important; } }
+  .giorno-btn { transition: all 0.18s ease; }
+  .giorno-btn:hover { transform: translateY(-2px); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const giorni = [
+  {
+    id:0, tag:"LUN", nome:"LUNEDÌ", emoji:"💪", tipo:"allenamento",
+    focus:"Petto · Schiena · Spalle (Calisthenics Upper)",
+    colore:"#22c55e", giri:"3 giri", durata:"~50 min",
+    recupero:45, recuperoMin:"45 SEC", recuperoLungo:120, recuperoMinLungo:"2 MIN",
+    blocchi:[
+      { id:"A", label:"SUPERSERIE A — SPINTA · TRAZIONE · SPINTA", esercizi:[
+        { nome:"Decline push-ups (piedi su sedia)", tag:"PETTO", tagC:"#a855f7", muscolo:"Petto alto · Tricipiti · Spalle anteriori", reps:"12 rip",
+          come:"Appoggia i piedi su una sedia. Mani a terra alla larghezza delle spalle. Abbassa lento (2 sec), spingi su. I piedi in alto spostano il carico sul petto alto — lavoro che le normali flessioni non raggiungono.",
+          alt:[
+            { nome:"Push-ups normali", come:"Classiche flessioni sulle mani. Mani alla larghezza delle spalle. Abbassa il petto fino a sfiorare il pavimento, spingi su." },
+            { nome:"Incline push-ups (mani sul bordo della sedia)", come:"Mani sul bordo di una sedia, corpo inclinato. Versione facilitata — buona per imparare la forma." }
+          ], semplificata:"Push-ups normali sul pavimento. Prima padroneggia la forma, poi alza i piedi." },
+        { nome:"Trazioni normali (presa larga pronata)", tag:"SCHIENA", tagC:"#f97316", muscolo:"Gran dorsale · Romboidei · Bicipiti", reps:"Max rip (min 5)",
+          come:"Presa pronata (dorso delle mani verso di te) più larga delle spalle. Braccia tese, corpo fermo. Spingi i gomiti verso i fianchi mentre sali. Mento sopra la sbarra. Scendi lento (3 sec). La trazione verticale è il fondamento della schiena nel calisthenics.",
+          alt:[
+            { nome:"Negative pull-ups", come:"Sali con un salto fino in cima. Poi scendi il più lento possibile (5-8 sec). Costruisce forza anche senza riuscire a salire da solo." },
+            { nome:"Trazioni orizzontali (inverted rows)", come:"Sdraiato sotto un tavolo solido, presa sul bordo. Tira il petto verso la superficie tenendo il corpo rigido. Zero sbarra necessaria — stessa catena muscolare." }
+          ], semplificata:"Inverted rows sotto il tavolo — corpo inclinato, tira il petto. Stessa schiena, niente sbarra." },
+        { nome:"Diamond push-ups", tag:"TRICIPITI", tagC:"#3b82f6", muscolo:"Tricipiti · Petto interno", reps:"10 rip",
+          come:"Mani sotto il petto a formare un diamante con pollici e indici. Gomiti stretti ai fianchi durante tutta la discesa. Isola i tricipiti. Scala a 8 rip se serve.",
+          alt:[
+            { nome:"Close-grip push-ups", come:"Mani vicine ma non a diamante. Leggermente più facile — buona progressione prima del diamond." },
+            { nome:"Tricep dips su sedia", come:"Mani sul bordo della sedia, piedi avanti, scendi abbassando il sedere verso terra. Rialzati. 12 rip." }
+          ], semplificata:"Push-ups normali con gomiti stretti al corpo — stesso effetto tricipiti, forma più accessibile." }
+      ]},
+      { id:"B", label:"SUPERSERIE B — SPINTA · TRAZIONE · SPINTA", esercizi:[
+        { nome:"Wide grip push-ups", tag:"PETTO", tagC:"#a855f7", muscolo:"Petto esterno · Core", reps:"12 rip",
+          come:"Mani a terra a distanza doppia delle spalle. Abbassa lento. Il petto lavora in allungamento maggiore rispetto alla flessione normale. Difficile alzarsi — usa la forza del petto, non i tricipiti.",
+          alt:[
+            { nome:"Push-ups con pausa 3 sec in basso", come:"Scendi, tieniti fermo 3 secondi nella posizione più bassa senza appoggiarti, poi spingi su. Elimina lo slancio e moltiplica l'intensità." },
+            { nome:"Explosive push-ups", come:"Spingi così forte da staccare le mani da terra. Sviluppa potenza esplosiva — fondamentale per gli sprint nel calcio." }
+          ], semplificata:"Push-ups normali — prima padroneggia la tecnica, poi allarga la presa." },
+        { nome:"Trazioni inverse (chin-ups, presa supinata)", tag:"BICIPITI", tagC:"#f97316", muscolo:"Bicipiti · Gran dorsale · Core", reps:"Max rip (min 4)",
+          come:"Presa supinata (palmi verso di te) alla larghezza delle spalle. Sali tirando i gomiti verso i fianchi. In cima stringi il bicipite. Scendi lento (3 sec). Più facile delle trazioni normali perché i bicipiti contribuiscono maggiormente — buon punto di ingresso.",
+          alt:[
+            { nome:"Negative chin-ups", come:"Sali con un salto fino in cima. Poi scendi lentissimo (6-8 sec). Costruisce la forza passiva del bicipite." },
+            { nome:"Inverted rows presa supinata", come:"Come le trazioni orizzontali sotto il tavolo ma con i palmi rivolti verso di te. Enfatizza i bicipiti." }
+          ], semplificata:"Inverted rows con palmi verso di te — sotto il tavolo, presa supinata." },
+        { nome:"Pike push-ups", tag:"SPALLE", tagC:"#a855f7", muscolo:"Deltoide anteriore · Tricipiti · Core", reps:"12 rip",
+          come:"Partenza in posizione a capanna (corpo piegato a V, fianchi in alto). Piega i gomiti abbassando la testa verso il pavimento. Spingi su. Carica le spalle in modo simile all'overhead press. Progredisce verso la verticale al muro.",
+          alt:[
+            { nome:"Pike push-up con piedi su sedia", come:"Piedi su sedia o gradino, corpo più verticale. Aumenta molto il carico sulle spalle." },
+            { nome:"Handstand hold al muro", come:"Verticale con il muro come appoggio. Tieni 20-30 sec. Isometrico sulle spalle." }
+          ], semplificata:"Overhead press con bottiglia d'acqua da 1,5L — impara il movimento spalle prima del pike." }
+      ]},
+      { id:"C", label:"BLOCCO C — CORE", esercizi:[
+        { nome:"Hollow body hold", tag:"CORE", tagC:"#94a3b8", muscolo:"Core profondo · Addome · Postura", reps:"30 sec",
+          come:"Sdraiato. Schiena completamente piatta a terra (lombare incollata). Alza gambe e spalle pochi centimetri da terra, braccia tese sopra la testa. Tieni. Se la schiena si stacca, alza le gambe più su.",
+          alt:[
+            { nome:"Hollow body rock", come:"Dalla posizione hollow, oscilla avanti e indietro come una banana. Mantieni la forma. 20 oscillazioni." },
+            { nome:"L-sit su sedie (2 sedie)", come:"Appoggia le mani su due sedie stabili, solleva il sedere e tendi le gambe orizzontali. Tieni 15 sec." }
+          ], semplificata:"Dead bug — sdraiato, abbassa una gamba tesa e il braccio opposto verso terra senza toccare, risali. 10 rip per lato." },
+        { nome:"Plank shoulder taps", tag:"CORE", tagC:"#94a3b8", muscolo:"Core · Spalle · Stabilità", reps:"20 rip (10 per lato)",
+          come:"Plank sulle mani. Con una mano tocca la spalla opposta poi torna, alterna. I fianchi NON devono ruotare. Rallenta il movimento per aumentare l'intensità sul core.",
+          alt:[
+            { nome:"Plank con sollevamento braccio e gamba opposti", come:"Dal plank, alza insieme il braccio destro e la gamba sinistra. Tieni 2 sec. Torna. Alterna." },
+            { nome:"Side plank con rotazione", come:"Plank laterale sul gomito. Porta il braccio libero sotto il corpo ruotando, poi riapri verso il soffitto. 10 rip per lato." }
+          ], semplificata:"Plank statico 40 sec — prima padroneggia il plank, poi aggiungi il movimento." },
+        { nome:"L-sit su sedie", tag:"CORE", tagC:"#94a3b8", muscolo:"Core · Tricipiti · Flessori anca", reps:"3 × 20 sec",
+          come:"Mani sul bordo di due sedie stabili. Spingi in su sollevando il corpo. Tendi le gambe orizzontali davanti a te (forma a L). Tieni. Se non riesci, tieni le ginocchia piegate.",
+          alt:[
+            { nome:"Tuck L-sit (ginocchia piegate)", come:"Stessa posizione ma ginocchia al petto invece delle gambe tese. 60% più facile." },
+            { nome:"Flessori anca seduto sul bordo della sedia", come:"Seduto sul bordo della sedia, alza le ginocchia verso il petto. 15 rip." }
+          ], semplificata:"Flessori anca seduto sul bordo della sedia — costruisce la forza base per l'L-sit." }
+      ]}
+    ]
+  },
+  {
+    id:1, tag:"MAR", nome:"MARTEDÌ", emoji:"🏃", tipo:"corsa",
+    focus:"Intervallata — Resistenza Cardio",
+    colore:"#22c55e", durata:"~30 min", giri:"---",
+    blocchi:[],
+    corsa:{
+      tipo:"Corsa Intervallata",
+      obiettivo:"Allenare il fiato e recuperare più in fretta tra uno scatto e l'altro",
+      intensita:"Alta",
+      struttura:[
+        {fase:"Riscaldamento", durata:"5 min", desc:"Cammina veloce o trotterella piano per 5 minuti. Non partire subito a testa bassa."},
+        {fase:"8 Ripetizioni", durata:"1:30 sprint + 1:00 recupero (cam.)", desc:"Corri forte per 90 secondi, poi cammina 60 secondi. Ripeti 8 volte. Il fiato corto è normale — è quello il punto."},
+        {fase:"Defaticamento", durata:"5 min", desc:"Rallenta, cammina 2-3 minuti, poi fai qualche minuto di stretching a polpacci e quadricipiti. Non saltarlo."}
+      ],
+      note:"Se senti le gambe che cedono o il fiato che non arriva, abbassa l'intensità o fermati — non devi finire tutte le ripetizioni per forza. Chiudi sempre con un po' di stretching."
+    }
+  },
+  {
+    id:2, tag:"MER", nome:"MERCOLEDÌ", emoji:"🦵", tipo:"allenamento",
+    focus:"Gambe · Esplosività · Forza Atletica",
+    colore:"#3b82f6", giri:"3 giri", durata:"~50 min",
+    recupero:45, recuperoMin:"45 SEC", recuperoLungo:120, recuperoMinLungo:"2 MIN",
+    blocchi:[
+      { id:"A", label:"BLOCCO A — GAMBE FORZA", esercizi:[
+        { nome:"Jump squats", tag:"GAMBE", tagC:"#a855f7", muscolo:"Quadricipiti · Glutei · Esplosività", reps:"15 rip",
+          come:"Scendi nello squat, poi esplodi verso l'alto saltando il più in alto possibile. Atterra morbido sulle punte e vai subito in squat per il prossimo. Non fermarti tra una rip e l'altra. Fondamentale per lo stacco nel calcio.",
+          alt:[
+            { nome:"Squat jump con pausa 2 sec in basso", come:"Scendi, tieni 2 sec nella posizione più bassa (pausa isometrica), poi esplodi. La pausa elimina lo slancio e massimizza la forza." },
+            { nome:"Box jump su gradino o sedia robusta", come:"Salta su un gradino/scalino con entrambi i piedi. Atterra in squat. Scendi passetto per passetto. 10 rip. Più controllato del jump squat." }
+          ], semplificata:"Squat normali veloci — scendi lento (2 sec), risali esplosivo. No salto, ma stesso lavoro muscolare." },
+        { nome:"Bulgarian split squat", tag:"GAMBE", tagC:"#a855f7", muscolo:"Quadricipiti · Glutei · Equilibrio", reps:"10 rip per gamba",
+          come:"Piede posteriore sulla sedia, piede anteriore avanti. Scendi abbassando il ginocchio posteriore verso terra. Risali. Il peso è quasi tutto sulla gamba davanti. Più difficile del normale affondo — costruisce molto più muscolo. Alterna le gambe dopo le 10 rip.",
+          alt:[
+            { nome:"Reverse lunge + knee drive", come:"Passo indietro, scendi, poi quando risali porta il ginocchio posteriore al petto in modo esplosivo. Aggiunge un elemento di equilibrio e potenza." },
+            { nome:"Affondo laterale", come:"Apri la gamba di lato in un passo largo. Piega quella gamba e abbassati. Risali. 10 rip per lato. Lavora l'interno coscia e l'abduttore — utile per i cambi di direzione." }
+          ], semplificata:"Affondo statico con mano al muro — stesso piede avanti fisso, scendi e risali tenendo una mano per l'equilibrio." },
+        { nome:"Single-leg hip thrust", tag:"POSTERIORE", tagC:"#f97316", muscolo:"Glutei · Femorali · Core", reps:"12 rip per gamba",
+          come:"Spalle sul bordo del divano o sedia. Un piede a terra, altra gamba tesa in aria. Spingi il bacino verso il soffitto con la gamba di appoggio. Tieni 2 sec in alto. Abbassa lento. Cambia gamba dopo le 12 rip. Fondamentale per prevenire gli infortuni nel calcio.",
+          alt:[
+            { nome:"Hip thrust a due gambe veloce", come:"Due gambe a terra, ma ritmo alto — su e giù senza pause. 20 rip. Più cardio, meno forza unilaterale." },
+            { nome:"Nordic curl parziale", come:"Inginocchiato con i piedi bloccati sotto un divano/sedia. Abbassa il busto verso terra il più lento possibile frenando con i femorali. Risali aiutandoti con le mani. Protegge dai problemi ai femorali nel calcio." }
+          ], semplificata:"Hip thrust a due gambe su tappetino — stesso movimento ma più facile. 20 rip." }
+      ]},
+      { id:"B", label:"BLOCCO B — ESPLOSIVITÀ", esercizi:[
+        { nome:"Burpees", tag:"FULL BODY", tagC:"#22c55e", muscolo:"Full body · Cardio · Esplosività", reps:"12 rip",
+          come:"Da in piedi → squat → mani a terra → salta indietro in plank → flessione → salta avanti → salta in alto con le braccia sopra la testa. Un ciclo completo. Non fermarti. Migliora la resistenza anaerobica esattamente come succede nel calcio.",
+          alt:[
+            { nome:"Burpee senza salto (step-back)", come:"Invece di saltare in plank, metti un piede alla volta. Invece di saltare in alto, torna solo in piedi. Stessa sequenza ma meno impatto." },
+            { nome:"Burpee + pull-up", come:"Dopo il salto in alto, agganciati alla sbarra e fai una trazione. Esercizio completo: forza + cardio + potenza verticale." }
+          ], semplificata:"Squat thrust — senza il salto finale, senza la flessione. Solo: squat → plank → squat → rialzati. La base del burpee." },
+        { nome:"Mountain climbers", tag:"CORE CARDIO", tagC:"#22c55e", muscolo:"Core · Spalle · Cardio lattacido", reps:"30 sec",
+          come:"In posizione di plank sulle mani. Porta un ginocchio verso il petto il più veloce possibile, poi cambia. Come se stessi correndo sul posto in posizione orizzontale. Non alzare i fianchi — la schiena rimane dritta. 30 sec al massimo della velocità.",
+          alt:[
+            { nome:"Slow mountain climbers con pausa", come:"Lo stesso ma lento — porta il ginocchio al petto, tienilo 2 sec, torna. 10 rip per gamba. Molto più difficile per il core rispetto alla versione veloce." },
+            { nome:"Cross-body mountain climbers", come:"Porta il ginocchio destro verso il gomito sinistro. Poi sinistra verso destra. Aggiunge rotazione — lavora gli obliqui." }
+          ], semplificata:"Knee-to-chest in piedi — in piedi, porta le ginocchia al petto veloce alternando. Zero impatto sulle spalle, stesso effetto cardio." }
+      ]},
+      { id:"C", label:"BLOCCO C — CORE ATLETICO", esercizi:[
+        { nome:"Leg raises (sollevamento gambe)", tag:"CORE", tagC:"#94a3b8", muscolo:"Core profondo · Flessori anca · Addome basso", reps:"12 rip",
+          come:"Sdraiato sul tappetino, braccia ai fianchi o sotto i glutei per supporto lombare. Gambe tese e unite. Alzale lentamente fino a 90°. Abbassa lento (3 sec) senza toccare terra. La schiena rimane piatta durante tutta la discesa — questo è il punto critico.",
+          alt:[
+            { nome:"Hanging knee raise alla sbarra", come:"Appeso alla sbarra, porta le ginocchia al petto il più in alto possibile. Abbassa lento. 12 rip." },
+            { nome:"Leg raises con ginocchia piegate", come:"Stessa traiettoria ma con le ginocchia leggermente piegate. Riduce lo stress sulla zona lombare." }
+          ], semplificata:"Leg raises con ginocchia piegate — stessa traiettoria, meno carico sui flessori." },
+        { nome:"L-sit su sedie (o parallele)", tag:"CORE", tagC:"#94a3b8", muscolo:"Core · Tricipiti · Flessori anca", reps:"3 × 20 sec",
+          come:"Appoggia le mani sul bordo di due sedie stabili. Spingi in su sollevando il corpo. Tendi le gambe orizzontali davanti a te (forma a L). Tieni. Se non riesci, tieni le ginocchia piegate. Sviluppa forza core e tricipiti insieme.",
+          alt:[
+            { nome:"Tuck L-sit (ginocchia piegate)", come:"Stessa posizione ma con le ginocchia al petto invece che le gambe tese. 60% più facile — buon punto di partenza." },
+            { nome:"Hanging knee raise alla sbarra", come:"Appeso alla sbarra, tieni le ginocchia al petto più a lungo possibile. 30-45 sec. Stesso lavoro del core senza richiedere spinta delle braccia." }
+          ], semplificata:"Flessori anca seduto — seduto sul bordo della sedia, alza le ginocchia verso il petto tenendo le mani ai lati della sedia. 15 rip. Costruisce la forza base per l'L-sit." },
+        { nome:"Plank to downward dog", tag:"CORE MOBILITÀ", tagC:"#94a3b8", muscolo:"Core · Spalle · Catena posteriore", reps:"15 rip",
+          come:"Dal plank sulle mani, spingi i fianchi verso il soffitto formando un triangolo (downward dog). Tieni 1 sec. Torna al plank. Continua. Migliora sia la forza del core che la mobilità della catena posteriore — fondamentale per un calciatore.",
+          alt:[
+            { nome:"Inchworm", come:"Da in piedi, abbassati con le mani a terra, cammina con le mani fino al plank, poi torna camminando i piedi verso le mani. 10 rip. Ottimo per la mobilità." }
+          ], semplificata:"Plank statico 40 sec — padroneggia prima il plank, poi aggiungi il movimento verso il dog." }
+      ]}
+    ]
+  },
+  {
+    id:3, tag:"GIO", nome:"GIOVEDÌ", emoji:"🏃", tipo:"corsa",
+    focus:"Corsa in Progressione — Ritmo e Resistenza",
+    colore:"#3b82f6", durata:"~30 min", giri:"---",
+    blocchi:[],
+    corsa:{
+      tipo:"Corsa in Progressione",
+      obiettivo:"Imparare a correre a ritmo sostenuto senza andare in crisi",
+      intensita:"Media-Alta",
+      struttura:[
+        {fase:"Riscaldamento", durata:"5 min", desc:"Trotterella piano per 5 minuti. Sciogli le articolazioni senza fretta."},
+        {fase:"Corsa progressiva", durata:"20-25 min", desc:"Parti comodo e ogni 5 minuti vai un po' più forte. Negli ultimi 5 minuti dovresti sentire lo sforzo, ma non è uno sprint. Se senti le gambe pesanti, vai più piano."},
+        {fase:"Defaticamento", durata:"5 min", desc:"Rallenta fino a camminare, poi fai stretching a quadricipiti e polpacci. Almeno 30 secondi per muscolo."}
+      ],
+      note:"Se le gambe sono pesanti o senti dolore, fermati — non c'è nessun problema. Chiudi sempre con qualche minuto di allungamento."
+    }
+  },
+  {
+    id:4, tag:"VEN", nome:"VENERDÌ", emoji:"⚡", tipo:"allenamento",
+    focus:"Full Body Power — Calisthenics Avanzato",
+    colore:"#f97316", giri:"3 giri", durata:"~55 min",
+    recupero:60, recuperoMin:"60 SEC", recuperoLungo:150, recuperoMinLungo:"2:30 MIN",
+    blocchi:[
+      { id:"A", label:"SUPERSERIE A — TRAZIONE · SPINTA · TRAZIONE", esercizi:[
+        { nome:"Trazioni normali (presa larga pronata)", tag:"SCHIENA", tagC:"#f97316", muscolo:"Gran dorsale · Romboidei · Bicipiti", reps:"Max rip (min 5)",
+          come:"Presa pronata larga (più delle spalle). Braccia tese, corpo fermo. Spingi i gomiti verso i fianchi mentre sali. Mento sopra la sbarra. Scendi lento (3 sec).",
+          alt:[
+            { nome:"Negative pull-ups", come:"Sali con un salto fino in cima. Scendi il più lento possibile (5-8 sec). Costruisce forza anche senza riuscire a salire." },
+            { nome:"Trazioni orizzontali (inverted rows)", come:"Sdraiato sotto un tavolo solido, presa sul bordo. Tira il petto verso la superficie tenendo il corpo rigido. Niente sbarra necessaria." }
+          ], semplificata:"Inverted rows sotto il tavolo — corpo inclinato, tira il petto verso la superficie." },
+        { nome:"Explosive push-ups", tag:"PETTO", tagC:"#a855f7", muscolo:"Petto · Tricipiti · Potenza esplosiva", reps:"8 rip",
+          come:"Flessione normale, poi spingi con tutta la forza staccando le mani da terra per un secondo. Riattera morbido sui palmi. Se troppo difficile, spingi forte senza staccare — lavora ugualmente la velocità.",
+          alt:[
+            { nome:"Push-ups veloci (no stacco)", come:"Push-ups normali ma la fase di spinta il più rapida possibile. Lavora la velocità senza staccare le mani." },
+            { nome:"Archer push-ups", come:"Posizione larga. Abbassati verso un braccio tenendo l'altro teso. Alterna i lati." }
+          ], semplificata:"Push-ups normali a ritmo elevato — spingi il più forte possibile." },
+        { nome:"Trazioni orizzontali (inverted rows)", tag:"SCHIENA", tagC:"#f97316", muscolo:"Romboidei · Trapezio medio · Bicipiti", reps:"12 rip",
+          come:"Sdraiato sotto un tavolo solido o una sbarra bassa. Presa sul bordo del tavolo, corpo rigido come una tavola. Tira il petto verso la superficie. Abbassa lento. Più ti avvicini all'orizzontale, più è difficile. Angolo diverso rispetto alle trazioni verticali — completa la schiena.",
+          alt:[
+            { nome:"Inverted rows con gambe piegate", come:"Stessa posizione ma con le ginocchia piegate a terra — versione più facile." },
+            { nome:"Inverted rows con piedi su sedia", come:"Piedi su sedia, corpo più orizzontale — versione più difficile. Aumenta il carico." }
+          ], semplificata:"Inverted rows con ginocchia piegate — corpo meno orizzontale, più accessibile." }
+      ]},
+      { id:"B", label:"SUPERSERIE B — TRAZIONE · SPINTA · TRAZIONE", esercizi:[
+        { nome:"Trazioni inverse (chin-ups, presa supinata)", tag:"BICIPITI", tagC:"#f97316", muscolo:"Bicipiti · Gran dorsale · Core", reps:"Max rip (min 4)",
+          come:"Presa supinata (palmi verso di te) alla larghezza delle spalle. Sali tirando i gomiti verso i fianchi. In cima stringi il bicipite. Scendi lento (3 sec). Enfatizza molto i bicipiti rispetto alle trazioni normali.",
+          alt:[
+            { nome:"Negative chin-ups", come:"Sali con un salto fino in cima. Poi scendi lentissimo (6-8 sec). Costruisce il bicipite passivamente." },
+            { nome:"Inverted rows presa supinata", come:"Inverted rows sotto il tavolo con i palmi rivolti verso di te. Stessa catena, niente sbarra." }
+          ], semplificata:"Inverted rows con presa supinata sotto il tavolo." },
+        { nome:"Dips su sedie", tag:"TRICIPITI", tagC:"#3b82f6", muscolo:"Tricipiti · Petto inferiore · Spalle anteriori", reps:"12 rip",
+          come:"Mani sul bordo di due sedie stabili. Corpo stretto tra le sedie. Scendi abbassando le spalle fino a quando i tricipiti sono paralleli al pavimento. Spingi su. Corpo leggermente inclinato in avanti per coinvolgere anche il petto. Non aprire i gomiti.",
+          alt:[
+            { nome:"Bench dips con gambe tese", come:"Mani sulla sedia, gambe tese appoggiate su un'altra sedia davanti. Scendi e sali. Più carico rispetto ai normali dips." },
+            { nome:"Dips con ginocchia piegate", come:"Stessa posizione ma gambe piegate a terra. Riduce il peso — versione più accessibile." }
+          ], semplificata:"Dips con ginocchia piegate — stessa posizione, meno carico." },
+        { nome:"Trazioni presa stretta pronata (narrow pull-ups)", tag:"SCHIENA", tagC:"#f97316", muscolo:"Dorsale inferiore · Brachiale · Core", reps:"Max rip (min 4)",
+          come:"Presa pronata stretta (mani appena più strette delle spalle). Sali tirando i gomiti verso la vita invece che verso i fianchi. Attiva il dorsale inferiore e il brachiale — zona diversa rispetto alla presa larga. In cima il petto sfiora la sbarra. Scendi lento.",
+          alt:[
+            { nome:"Commando pull-ups", come:"Presa a martello (pollici verso di te, sbarra laterale). Porta il mento a sinistra della sbarra, ridiscendi, poi a destra. Alterna i lati." },
+            { nome:"Inverted rows presa stretta", come:"Inverted rows sotto il tavolo con le mani vicine. Enfatizza la parte centrale e inferiore della schiena." }
+          ], semplificata:"Pull-ups normali — prima costruisci la forza base, poi affina la presa stretta." }
+      ]},
+      { id:"C", label:"BLOCCO C — CORE + METABOLICO", esercizi:[
+        { nome:"L-sit su sedie", tag:"CORE", tagC:"#94a3b8", muscolo:"Core · Tricipiti · Flessori anca", reps:"3 × 20 sec",
+          come:"Mani sul bordo di due sedie stabili. Spingi in su sollevando il corpo. Tendi le gambe orizzontali davanti (forma a L). Tieni. Se non riesci, tieni le ginocchia piegate.",
+          alt:[
+            { nome:"Tuck L-sit (ginocchia piegate)", come:"Stessa posizione ma ginocchia al petto. 60% più facile." },
+            { nome:"Hanging knee raise alla sbarra", come:"Appeso alla sbarra, tieni le ginocchia al petto il più a lungo possibile. 30-45 sec." }
+          ], semplificata:"Flessori anca seduto sul bordo della sedia — costruisce la forza base. 15 rip." },
+        { nome:"Burpees", tag:"FULL BODY", tagC:"#22c55e", muscolo:"Full body · Cardio · Esplosività", reps:"10 rip",
+          come:"Da in piedi: squat, mani a terra, salta indietro in plank, flessione, salta avanti, salta in alto con braccia sopra la testa. Non fermarti tra una rip e l'altra.",
+          alt:[
+            { nome:"Burpee senza salto (step-back)", come:"Invece di saltare in plank, metti un piede alla volta. Invece di saltare in alto, torna solo in piedi." },
+            { nome:"Squat thrust", come:"Solo: squat, plank, squat, rialzati. La base del burpee senza salto finale." }
+          ], semplificata:"Squat thrust — senza il salto finale, senza la flessione." },
+        { nome:"Russian twist veloce", tag:"CORE CARDIO", tagC:"#94a3b8", muscolo:"Obliqui · Core · Resistenza", reps:"20 rip per lato",
+          come:"Seduto con ginocchia piegate e piedi alzati da terra. Inclina il busto a 45°. Ruota velocemente il busto da destra a sinistra toccando il pavimento con le mani. 20 rip per lato (40 totali). Per aumentare: tieni una bottiglia d'acqua piena.",
+          alt:[
+            { nome:"Russian twist con bottiglia 1,5L", come:"Stessa tecnica con una bottiglia piena. Aumenta il carico sugli obliqui senza manubri." },
+            { nome:"Crunch obliquo", come:"Sdraiato, porta il gomito al ginocchio opposto. 15 rip per lato. Stessi muscoli, meno equilibrio richiesto." }
+          ], semplificata:"Crunch obliquo — porta il gomito al ginocchio opposto. 15 rip per lato." }
+      ]}
+    ]
+  },
+  {
+    id:5, tag:"SAB", nome:"SABATO", emoji:"🏃", tipo:"corsa",
+    focus:"Long Run — Fondo e Resistenza",
+    colore:"#f97316", durata:"~45-50 min", giri:"---",
+    blocchi:[],
+    corsa:{
+      tipo:"Long Run (Corsa Lunga)",
+      obiettivo:"Abituare il corpo a stare in movimento a lungo senza svuotarsi",
+      intensita:"Bassa-Media (conversazione)",
+      struttura:[
+        {fase:"L'intera corsa", durata:"40-50 min", desc:"Ritmo comodo — devi riuscire a parlare senza fermarti. Se ansimi troppo, rallenta. Non guardare il tempo, l'importante è stare in movimento."},
+        {fase:"Come aumentare", durata:"ogni 2 settimane", desc:"Aggiungi 5 minuti ogni 2 settimane. Niente fretta — gli infortuni arrivano quando si esagera."},
+        {fase:"Defaticamento", durata:"5-10 min", desc:"Cammina 5 minuti, poi stretching: quadricipiti, femorali e polpacci. Almeno 30 secondi per muscolo — non saltarlo mai dopo una corsa lunga."}
+      ],
+      note:"Se senti le gambe dure o qualcosa che fa male, fermati senza pensarci. Finisci sempre con un po' di stretching — è la parte più importante dopo una corsa lunga."
+    }
+  },
+  {
+    id:6, tag:"DOM", nome:"DOMENICA", emoji:"😴", tipo:"riposo",
+    focus:"Riposo Attivo — Recupero Completo",
+    colore:"#6b7280", durata:"---", giri:"---",
+    blocchi:[],
+    corsa:null
+  }
+];
+
+const attrezzi = [
+  { emoji:"🔩", nome:"Sbarra per trazioni (da porta)", prezzo:"~20-35€", quando:"PRIORITÀ 1 — il primo acquisto", perche:"Le trazioni sono l'esercizio più efficace per dorsali e bicipiti senza attrezzi pesanti. Senza sbarra, sostituisci pull-ups con inverted rows. Ma cerca di averla — è l'unico attrezzo che cambia davvero la scheda." },
+  { emoji:"🟦", nome:"Tappetino yoga", prezzo:"~15€", quando:"Da avere subito", perche:"Dragon flag, hollow body, mountain climbers — tutti richiedono un tappetino. La schiena ti ringrazia. Spessore minimo 6mm." },
+  { emoji:"🪑", nome:"2 sedie robuste (già in casa)", prezzo:"0€", quando:"Già disponibili", perche:"Dips, L-sit, Bulgarian split squat, decline push-ups — le sedie sostituiscono le parallele. Assicurati che non scivolino. Metti i piedi sotto le gambe per bloccarle se necessario." },
+  { emoji:"📐", nome:"Gradino o scalino (già in casa)", prezzo:"0€", quando:"Già disponibile", perche:"Step-up esplosivi, box jump — usa l'ultimo gradino delle scale. Anche una piattaforma da 20-30cm va benissimo." },
+  { emoji:"⌛", nome:"App timer gratuita (telefono)", prezzo:"0€", quando:"Già disponibile", perche:"Per i 30-45 sec di recupero tra i blocchi. Usa qualsiasi app timer. Cronometro del telefono va benissimo." }
+];
+
+const pasti = [
+  { pasto:"Colazione", emoji:"🌅", orario:"7:00–8:30", colore:"#22c55e",
+    idee:[
+      { nome:"Uova strapazzate 3 + avena 80g + latte", macro:"~35g prot.", note:"Il breakfast dei calciatori. Proteine + carboidrati lenti = energia per tutta la mattina. Prepara l'avena la sera (overnight oats) per farlo in 2 minuti." },
+      { nome:"Ricotta 200g + miele + pane integrale 2 fette", macro:"~28g prot.", note:"Ricotta magra alta in proteine. Pane integrale = carboidrati a lento rilascio. Nessuna cottura. Velocissimo." },
+      { nome:"Frullato: latte intero + banana + avena 60g + 3 uova crude (o yogurt greco 200g)", macro:"~38g prot.", note:"Per chi ha fretta. Frulla tutto. Le uova crude nel frullato sono sicure se fresche. Se preferisci, usa yogurt greco." }
+    ]},
+  { pasto:"Spuntino pre-allenamento", emoji:"⚡", orario:"30-60 min prima di allenarti", colore:"#f97316",
+    idee:[
+      { nome:"Banana + manciata di noci (20g)", macro:"~4g prot.", note:"Zuccheri rapidi + grassi lenti = energia immediata senza crollo. Classico pre-workout naturale. Non allenartsi a stomaco vuoto — le prestazioni calano." },
+      { nome:"Pane integrale + miele + pinzimonio", macro:"~6g prot.", note:"Carboidrati rapidi per energie immediate. 1-2 fette. Nessun grasso pesante che rallenta la digestione." },
+      { nome:"Ricotta 100g + frutta", macro:"~13g prot.", note:"Se ti alleni nel pomeriggio e l'ultimo pasto era presto. Proteine + carbo per non svuotarti durante l'allenamento." }
+    ]},
+  { pasto:"Pranzo", emoji:"☀️", orario:"12:30–14:00", colore:"#3b82f6",
+    idee:[
+      { nome:"Pasta integrale 100g + tonno 200g + pomodorini + olio", macro:"~42g prot.", note:"Il pranzo del calciatore. Carboidrati abbondanti per ricostituire il glicogeno. Tonno = proteine veloci. Pomodorini = vitamine. Olio = grassi buoni. Completo." },
+      { nome:"Riso 100g + pollo 200g alla piastra + verdure abbondanti", macro:"~48g prot.", note:"La formula classica. Riso integrale se possibile. Il pollo è il re delle proteine magre. Mangia verdure finché vuoi — calorie quasi zero." },
+      { nome:"Legumi 150g (lenticchie o ceci) + pane integrale 2 fette + uova 2 sode", macro:"~34g prot.", note:"Pasto economico e completo. Legumi = proteine + carboidrati lenti + ferro. Uova per completare gli aminoacidi." }
+    ]},
+  { pasto:"Spuntino post-allenamento", emoji:"🔄", orario:"Entro 30 min dopo l'allenamento", colore:"#a855f7",
+    idee:[
+      { nome:"Yogurt greco 200g + banana + miele", macro:"~20g prot.", note:"La finestra anabolica — i muscoli sono più ricettivi nei 30 min post-allenamento. Proteine + zuccheri rapidi per il recupero. Non saltarlo mai dopo un allenamento duro." },
+      { nome:"Latte intero 300ml + frutta secca 30g", macro:"~12g prot.", note:"Se non hai voglia di preparare nulla. Latte = proteine complete + calcio. Frutta secca = grassi + energia rapida." },
+      { nome:"Ricotta 150g + miele + gallette di riso", macro:"~17g prot.", note:"Proteico e dolce. Soddisfa la voglia di dolce post-fatica senza junk food." }
+    ]},
+  { pasto:"Cena", emoji:"🌙", orario:"19:30–21:00", colore:"#22c55e",
+    idee:[
+      { nome:"Salmone 200g + patate dolci 200g + broccoli", macro:"~42g prot.", note:"Cena anti-infiammatoria per il recupero muscolare. Il salmone ha omega-3 che riducono i dolori muscolari. Le patate dolci = carboidrati che non pesano la digestione notturna." },
+      { nome:"Bistecca 200g + riso 80g + insalata", macro:"~50g prot.", note:"La cena proteica del calciatore. Manzo = creatina naturale + ferro + proteine complete. Riso per ricostituire il glicogeno se ti alleni domani." },
+      { nome:"Frittata 4 uova + mozzarella + pomodori + pane integrale", macro:"~34g prot.", note:"Cena veloce. Uova = proteine complete. Mozzarella = calcio. Non preoccuparti del colesterolo — chi si allena intensamente non ha problemi." }
+    ]}
+];
+
+let state = { tab:"circuito", giorno:0, aperto:null, pasto:null };
+let timerInterval = null;
+let timerState = { active: false, secondsLeft: 0 };
+let currentTimerKey = null;
+
+function startTimer(seconds, timerKey) {
+  if (timerInterval) clearInterval(timerInterval);
+  document.querySelectorAll('[id^="itimer-"]').forEach(el => { el.style.display='none'; el.innerHTML=''; });
+  currentTimerKey = timerKey;
+  timerState = { active: true, secondsLeft: seconds };
+  timerInterval = setInterval(() => {
+    timerState.secondsLeft--;
+    updateTimerUI();
+    if (timerState.secondsLeft <= 0) {
+      clearInterval(timerInterval);
+      timerState.active = false;
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      updateTimerUI();
+    }
+  }, 1000);
+  updateTimerUI();
+}
+
+function stopTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerState = { active: false, secondsLeft: 0 };
+  if (currentTimerKey) {
+    const el = document.getElementById('itimer-' + currentTimerKey);
+    if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+    currentTimerKey = null;
+  }
+}
+
+function updateTimerUI() {
+  if (!currentTimerKey) return;
+  const el = document.getElementById('itimer-' + currentTimerKey);
+  if (!el) return;
+  el.style.display = 'block';
+  if (!timerState.active && timerState.secondsLeft <= 0) {
+    el.innerHTML = '<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#14532d22;border:1px solid #22c55e44;border-radius:8px;margin-top:2px;"><span style="font-size:16px;">✅</span><span style="font-size:12px;font-weight:700;color:#22c55e;flex:1;">Riposo completato!</span><button onclick="stopTimer()" style="background:none;border:1px solid #22c55e55;color:#22c55e;padding:3px 10px;border-radius:5px;font-size:11px;font-weight:700;">OK ✓</button></div>';
+    return;
+  }
+  const m = Math.floor(timerState.secondsLeft / 60);
+  const s = timerState.secondsLeft % 60;
+  const timeStr = m > 0 ? m+':'+String(s).padStart(2,'0') : timerState.secondsLeft+'s';
+  el.innerHTML = '<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#ef444411;border:1px solid #ef444433;border-radius:8px;margin-top:2px;"><span style="font-size:22px;font-weight:900;font-family:\'Space Grotesk\',sans-serif;color:#ef4444;min-width:52px;">'+timeStr+'</span><span style="font-size:10px;color:#6b7280;flex:1;letter-spacing:1px;">RIPOSO</span><button onclick="event.stopPropagation();stopTimer()" style="background:none;border:1px solid #374151;color:#6b7280;padding:3px 8px;border-radius:5px;font-size:11px;">✕ salta</button></div>';
+}
+
+function setState(updates) { Object.assign(state, updates); render(); }
+
+const bloccoColori = {
+  A: { bg:"#0a1a0e", border:"#16a34a44", label:"#22c55e" },
+  B: { bg:"#0a1020", border:"#1e3a8a44", label:"#3b82f6" },
+  C: { bg:"#1a100a", border:"#7c2d1244", label:"#f97316" }
+};
+
+function render() { document.getElementById('app').innerHTML = buildHTML(); attachEvents(); }
+
+function buildHTML() {
+  const g = giorni[state.giorno];
+  return `
+  <div style="font-family:'Inter',system-ui,sans-serif;background:#0c0c0c;min-height:100vh;color:#fff;max-width:480px;margin:0 auto;">
+    <div style="background:#111827;padding:20px 18px 16px;border-bottom:1px solid #1f2937;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:3px;color:#374151;margin-bottom:5px;">SCHEDA PERSONALIZZATA · CALISTHENICS + CORSA</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:900;letter-spacing:-0.5px;">Gio ⚽</div>
+      <div style="font-size:12px;color:#4b5563;margin-top:2px;">30 anni · 1,76 m · 70 kg · Calcio amatoriale</div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
+        ${["💪 Corpo libero","🏃 Corsa alternata","⚡ Intensità alta","🔩 Pull-ups (opzionali)"].map(t=>`<span style="background:#1f2937;font-size:10px;padding:3px 10px;border-radius:20px;color:#6b7280;">${t}</span>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;border-bottom:1px solid #1f2937;background:#0c0c0c;position:sticky;top:0;z-index:10;">
+      ${[{id:"circuito",l:"Allenamento",e:"⚡"},{id:"attrezzi",l:"Attrezzi",e:"🔩"},{id:"cibo",l:"Alimentazione",e:"🥩"}].map(t=>
+        `<button data-tab="${t.id}" style="flex:1;padding:12px 4px;background:none;border:none;border-bottom:${state.tab===t.id?"2px solid #22c55e":"2px solid transparent"};color:${state.tab===t.id?"#fff":"#4b5563"};">
+          <div style="font-size:16px;">${t.e}</div>
+          <div style="font-size:10px;font-weight:700;margin-top:2px;">${t.l}</div>
+        </button>`).join('')}
+    </div>
+    ${state.tab === "circuito" ? buildCircuito(g) : ""}
+    ${state.tab === "attrezzi" ? buildAttrezzi() : ""}
+    ${state.tab === "cibo" ? buildCibo() : ""}
+  </div>`;
+}
+
+function buildGiornoSelector() {
+  return `
+    <div style="font-size:9px;letter-spacing:2px;color:#374151;margin-bottom:8px;">SCEGLI IL GIORNO</div>
+    <div style="display:flex;gap:6px;margin-bottom:12px;">
+      ${giorni.map((gi,i)=>
+        `<button data-giorno="${i}" class="giorno-btn" style="flex:1;padding:11px 4px;border-radius:10px;border:2px solid ${state.giorno===i?gi.colore:"#1f2937"};background:${state.giorno===i?gi.colore+"22":"#161616"};text-align:center;">
+          <div style="font-size:18px;">${gi.emoji}</div>
+          <div style="font-size:9px;font-weight:800;color:${state.giorno===i?gi.colore:"#374151"};margin-top:4px;">${gi.tag}</div>
+        </button>`).join('')}
+    </div>`;
+}
+
+function buildCorsa(g) {
+  const c = g.corsa;
+  const intensitaColori = {Alta:"#ef4444","Media-Alta":"#f97316","Bassa-Media (conversazione)":"#22c55e"};
+  const ic = intensitaColori[c.intensita] || "#22c55e";
+  return `<div style="padding:14px 18px 0;">
+    ${buildGiornoSelector()}
+    <div style="background:${g.colore}22;border:1px solid ${g.colore}44;border-radius:12px;padding:13px 15px;margin-bottom:14px;">
+      <div style="font-size:9px;font-weight:800;color:${g.colore};letter-spacing:2px;margin-bottom:4px;">ALLENAMENTO CARDIO</div>
+      <div style="font-size:18px;font-weight:900;">${c.tipo}</div>
+      <div style="font-size:12px;color:#6b7280;margin-top:4px;">${c.obiettivo}</div>
+      <div style="margin-top:8px;display:flex;gap:8px;">
+        <span style="background:${ic}22;color:${ic};font-size:10px;font-weight:800;padding:3px 10px;border-radius:6px;">Intensità: ${c.intensita}</span>
+        <span style="background:#1f2937;font-size:10px;padding:3px 10px;border-radius:6px;color:#6b7280;">⏱ ${g.durata}</span>
+      </div>
+    </div>
+    <div style="font-size:9px;letter-spacing:2px;color:#374151;margin-bottom:10px;">STRUTTURA SESSIONE</div>
+    ${c.struttura.map((fase, i) => `
+      <div style="background:#161616;border:1px solid #1f2937;border-radius:12px;padding:14px;margin-bottom:8px;display:flex;gap:14px;">
+        <div style="width:34px;height:34px;border-radius:50%;background:${g.colore};color:#000;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${i+1}</div>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#e2e8f0;">${fase.fase}</div>
+          <div style="font-size:11px;font-weight:600;color:${g.colore};margin:3px 0;">${fase.durata}</div>
+          <div style="font-size:11px;color:#4b5563;line-height:1.5;">${fase.desc}</div>
+        </div>
+      </div>`).join('')}
+    <div style="background:#0a1f14;border:1px solid #14532d55;border-radius:12px;padding:14px;margin-top:4px;">
+      <div style="font-size:9px;font-weight:800;color:#22c55e;letter-spacing:2px;margin-bottom:6px;">📌 NOTA</div>
+      <div style="font-size:11px;color:#4b5563;line-height:1.5;">${c.nota||c.note}</div>
+    </div>
+    ${buildSettimana()}
+    <div style="height:24px;"></div>
+  </div>`;
+}
+
+function buildRiposo(g) {
+  return `<div style="padding:14px 18px 0;">
+    ${buildGiornoSelector()}
+    <div style="background:#161616;border:1px solid #1f2937;border-radius:12px;padding:24px;margin-bottom:14px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:12px;">😴</div>
+      <div style="font-size:20px;font-weight:900;margin-bottom:8px;">Giornata di riposo</div>
+      <div style="font-size:13px;color:#4b5563;line-height:1.6;">Il riposo è parte dell'allenamento. I muscoli crescono durante il recupero, non durante lo sforzo.<br><br>Puoi fare una camminata, mobilità leggera o stretching — ma nessun allenamento intenso.</div>
+    </div>
+    ${buildSettimana()}
+    <div style="height:24px;"></div>
+  </div>`;
+}
+
+function buildSettimana() {
+  const settimana = [
+    {tag:"LUN",tipo:"Upper body calisthenics",emoji:"💪",attivo:true,c:"#22c55e"},
+    {tag:"MAR",tipo:"Corsa intervallata",emoji:"🏃",attivo:true,c:"#22c55e"},
+    {tag:"MER",tipo:"Lower body + esplosività",emoji:"🦵",attivo:true,c:"#3b82f6"},
+    {tag:"GIO",tipo:"Corsa in progressione",emoji:"🏃",attivo:true,c:"#3b82f6"},
+    {tag:"VEN",tipo:"Full body power",emoji:"⚡",attivo:true,c:"#f97316"},
+    {tag:"SAB",tipo:"Long run 40-50 min",emoji:"🏃",attivo:true,c:"#f97316"},
+    {tag:"DOM",tipo:"Riposo attivo o stretching",emoji:"😴",attivo:false,c:""}
+  ];
+  return `<div style="margin-top:16px;">
+    <div style="font-size:9px;letter-spacing:2px;color:#374151;margin-bottom:8px;">PIANO SETTIMANALE</div>
+    <div style="background:#161616;border:1px solid #1f2937;border-radius:12px;overflow:hidden;">
+      ${settimana.map((r,i)=>
+        `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:${i<6?"1px solid #0c0c0c":"none"};background:${r.attivo?r.c+"0a":"transparent"};">
+          <div style="width:34px;height:34px;border-radius:8px;background:${r.attivo?r.c+"22":"#0c0c0c"};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span style="font-size:15px;">${r.emoji}</span>
+          </div>
+          <div style="flex:1;">
+            <span style="font-size:11px;font-weight:800;color:${r.attivo?r.c:"#1f2937"};">${r.tag}  </span>
+            <span style="font-size:11px;color:${r.attivo?"#6b7280":"#1f2937"};">— ${r.tipo}</span>
+          </div>
+          ${r.attivo?`<span style="background:${r.c}22;color:${r.c};font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;">${r.emoji==="🏃"?"CORSA":"ALLENA"}</span>`:""}
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function buildCircuito(g) {
+  if (g.tipo === "corsa") return buildCorsa(g);
+  if (g.tipo === "riposo") return buildRiposo(g);
+  let esN = 0;
+  return `<div style="padding:14px 18px 0;">
+    <div style="background:#111827;border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+      <div style="font-size:9px;color:#374151;letter-spacing:2px;margin-bottom:8px;">STRUTTURA DI OGNI GIRO</div>
+      <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
+        ${[{t:"Blocco A",c:"#22c55e"},{t:"45s🔴",c:"#ef4444"},{t:"Blocco B",c:"#3b82f6"},{t:"45s🔴",c:"#ef4444"},{t:"Blocco C",c:"#f97316"},{t:"2min⏸",c:"#a855f7"}]
+          .map(i=>`<span style="font-size:9px;font-weight:800;color:${i.c};padding:2px 5px;background:${i.c}22;border-radius:4px;">${i.t}</span>`).join('')}
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+        ${[{c:"#22c55e",t:"GAMBE/PETTO"},{c:"#3b82f6",t:"SCHIENA/GAMBE"},{c:"#f97316",t:"CORE/FULL BODY"},{c:"#f97316",t:"ESPLOSIVITÀ"}]
+          .map(l=>`<div style="display:flex;align-items:center;gap:4px;"><div style="width:6px;height:6px;border-radius:50%;background:${l.c};"></div><span style="font-size:9px;color:#374151;">${l.t}</span></div>`).join('')}
+      </div>
+    </div>
+    ${buildGiornoSelector()}
+    <div style="background:${g.colore}22;border:1px solid ${g.colore}44;border-radius:12px;padding:13px 15px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:16px;font-weight:900;">${g.nome}</div>
+        <div style="font-size:12px;color:${g.colore};margin-top:2px;font-weight:600;">${g.focus}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:13px;font-weight:800;color:${g.colore};">⏱ ${g.durata}</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:2px;">${g.giri}</div>
+      </div>
+    </div>
+    <div style="font-size:9px;letter-spacing:2px;color:#374151;margin-bottom:10px;">SEQUENZA ESERCIZI</div>
+    ${g.blocchi.map((blocco, bi) => {
+      const bc = bloccoColori[blocco.id] || bloccoColori.A;
+      const isUltimoB = bi === g.blocchi.length - 1;
+      return `
+      <div style="margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <div style="background:${bc.label}22;border:1px solid ${bc.label}44;border-radius:6px;padding:3px 10px;font-size:10px;font-weight:800;color:${bc.label};">${blocco.label}</div>
+        </div>
+        <div style="background:${bc.bg};border:1px solid ${bc.border};border-radius:12px;overflow:hidden;">
+          ${blocco.esercizi.map((es, ei) => {
+            esN++;
+            const key = state.giorno+'-'+blocco.id+'-'+ei;
+            const isAp = state.aperto === key;
+            const isUltimoE = ei === blocco.esercizi.length - 1;
+            const num = esN;
+            return `
+            <div>
+              <button data-key="${key}" class="es-btn" style="width:100%;padding:13px 14px;background:none;border:none;border-bottom:${!isUltimoE?'1px solid '+bc.border:'none'};display:flex;align-items:center;gap:10px;text-align:left;">
+                <div style="width:24px;height:24px;border-radius:6px;background:${bc.label}33;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:${bc.label};flex-shrink:0;">${num}</div>
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap;">
+                    <span style="font-size:13px;font-weight:700;color:#e2e8f0;">${es.nome}</span>
+                    <span style="background:${es.tagC}22;color:${es.tagC};font-size:8px;font-weight:800;padding:1px 5px;border-radius:3px;flex-shrink:0;">${es.tag}</span>
+                  </div>
+                  <div style="font-size:10px;color:#374151;margin-bottom:4px;">${es.muscolo}</div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="background:${bc.label};color:#000;font-size:10px;font-weight:900;padding:2px 8px;border-radius:4px;">${es.reps}</span>
+                    ${isUltimoE
+                      ? '<span style="font-size:10px;font-weight:700;color:'+(isUltimoB?'#a855f7':'#ef4444')+';">'+(isUltimoB?'→ ⏸ '+(g.recuperoMinLungo||'2 MIN'):'→ 🔴 '+(g.recuperoMin||'45 SEC'))+'</span><button onclick="event.stopPropagation();startTimer('+(isUltimoB?(g.recuperoLungo||120):(g.recupero||45))+',\''+key+'\')" style="margin-left:5px;background:'+(isUltimoB?'#a855f722':'#ef444422')+';border:1px solid '+(isUltimoB?'#a855f766':'#ef444466')+';color:'+(isUltimoB?'#a855f7':'#ef4444')+';font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;">▶</button>'
+                      : '<span style="font-size:10px;color:#374151;">→ prossimo →</span>'}
+                  </div>
+                </div>
+                <span style="color:${isAp?bc.label:'#374151'};font-size:13px;flex-shrink:0;">${isAp?'▲':'▼'}</span>
+              </button>
+              ${isAp ? `
+              <div class="es-detail" style="padding:0 14px 14px;border-top:1px solid ${bc.border};">
+                <div style="background:#0c0c0c;border-left:3px solid ${bc.label};border-radius:0 8px 8px 0;padding:10px 12px;margin-top:10px;">
+                  <div style="font-size:9px;font-weight:800;color:${bc.label};letter-spacing:2px;margin-bottom:4px;">COME SI FA</div>
+                  <div style="font-size:12px;color:#94a3b8;line-height:1.6;">${es.come}</div>
+                </div>
+                <div style="margin-top:10px;">
+                  <div style="font-size:9px;font-weight:800;color:#3b82f6;letter-spacing:2px;margin-bottom:6px;">🔄 VARIANTI — esercizi alternativi</div>
+                  ${es.alt.map(v=>`
+                    <div style="background:#0c0c0c;border:1px solid ${bc.border};border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+                      <div style="font-size:12px;font-weight:700;color:#e2e8f0;margin-bottom:4px;">${v.nome}</div>
+                      <div style="font-size:11px;color:#6b7280;line-height:1.5;">${v.come}</div>
+                    </div>`).join('')}
+                </div>
+                <div style="background:#1a0f00;border:1px solid #78350f55;border-radius:8px;padding:10px 12px;margin-top:2px;display:flex;gap:10px;align-items:flex-start;">
+                  <span style="font-size:16px;flex-shrink:0;">⚡</span>
+                  <div>
+                    <div style="font-size:9px;font-weight:800;color:#f59e0b;letter-spacing:2px;margin-bottom:3px;">SE NON RIESCI ANCORA</div>
+                    <div style="font-size:11px;color:#fbbf24;line-height:1.5;">${es.semplificata}</div>
+                  </div>
+                </div>
+              </div>` : ""}
+              <div id="itimer-${key}" style="display:none;padding:0 10px 6px;"></div>
+            </div>`;
+          }).join('')}
+        </div>
+        ${!isUltimoB ? `
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;margin-top:4px;">
+          <div style="flex:1;height:1px;background:#ef444430;"></div>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+            <span style="font-size:11px;font-weight:800;color:#ef4444;white-space:nowrap;">🔴 ${g.recuperoMin||"45 SEC"} RIPOSO</span>
+            <button onclick="event.stopPropagation();startTimer(${g.recupero||45},'blk-${bi}')" style="background:#ef444422;border:1px solid #ef444466;color:#ef4444;font-size:9px;font-weight:800;padding:3px 8px;border-radius:5px;">▶ AVVIA</button>
+          </div>
+          <div style="flex:1;height:1px;background:#ef444430;"></div>
+        </div>
+        <div id="itimer-blk-${bi}" style="display:none;padding:0 4px 4px;"></div>` : ""}
+      </div>`;
+    }).join('')}
+    <div style="background:#120a1e;border:1px solid #581c8766;border-radius:12px;padding:14px;margin-top:6px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:28px;">⏸</span>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:900;color:#a855f7;">2 MINUTI DI RIPOSO</div>
+          <div style="font-size:11px;color:#6b7280;margin-top:3px;">Poi ricomincia dall'esercizio 1 per il giro successivo</div>
+        </div>
+        <button onclick="startTimer(120,'lungo')" style="background:#a855f722;border:1px solid #a855f766;color:#a855f7;font-size:10px;font-weight:800;padding:7px 12px;border-radius:8px;flex-shrink:0;">▶ AVVIA</button>
+      </div>
+      <div id="itimer-lungo" style="display:none;margin-top:10px;"></div>
+    </div>
+    ${buildSettimana()}
+    <div style="height:24px;"></div>
+  </div>`;
+}
+
+function buildAttrezzi() {
+  return `<div style="padding:16px 18px;">
+    <div style="background:#0a1a0e;border:1px solid #16a34a44;border-radius:12px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:800;color:#22c55e;margin-bottom:4px;">💶 Budget extra stimato</div>
+      <div style="font-size:24px;font-weight:900;">~20-35€</div>
+      <div style="font-size:11px;color:#4b5563;margin-top:4px;">Solo per la sbarra da trazioni. Tutto il resto è già in casa o gratuito.</div>
+    </div>
+    ${attrezzi.map(a=>`
+      <div style="background:#161616;border:1px solid #1f2937;border-radius:12px;padding:14px;margin-bottom:8px;display:flex;gap:14px;align-items:flex-start;">
+        <div style="font-size:28px;flex-shrink:0;">${a.emoji}</div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div style="font-size:14px;font-weight:700;">${a.nome}</div>
+            <div style="font-size:14px;font-weight:900;color:#22c55e;flex-shrink:0;margin-left:8px;">${a.prezzo}</div>
+          </div>
+          <div style="display:inline-block;background:#1f2937;font-size:9px;font-weight:700;color:#6b7280;padding:2px 8px;border-radius:4px;margin-top:5px;">${a.quando}</div>
+          <div style="font-size:11px;color:#4b5563;margin-top:6px;line-height:1.5;">${a.perche}</div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+
+function buildCibo() {
+  return `<div style="padding:16px 18px;">
+    <div style="background:#111827;border:1px solid #1f2937;border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:800;color:#6b7280;letter-spacing:2px;margin-bottom:12px;">OBIETTIVI GIORNALIERI — MASSA + RESISTENZA CALCIO</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        ${[{label:"Calorie",val:"2.900–3.200",unit:"kcal/giorno",colore:"#22c55e",note:"Surplus moderato per costruire massa senza ingrassare"},
+           {label:"Proteine",val:"140–160",unit:"g/giorno",colore:"#f97316",note:"2g/kg — ricostruzione muscolare massima"},
+           {label:"Carboidrati",val:"380–430",unit:"g/giorno",colore:"#3b82f6",note:"Alto: il carburante per correre e allenarsi"},
+           {label:"Grassi",val:"80–100",unit:"g/giorno",colore:"#a855f7",note:"Olio oliva, pesce, frutta secca, uova"}]
+          .map(m=>`
+          <div style="background:#0c0c0c;border:1px solid ${m.colore}33;border-radius:10px;padding:12px;">
+            <div style="font-size:10px;color:#4b5563;margin-bottom:4px;">${m.label}</div>
+            <div style="font-size:16px;font-weight:900;color:${m.colore};">${m.val}</div>
+            <div style="font-size:10px;color:#374151;margin-top:2px;">${m.unit}</div>
+            <div style="font-size:10px;color:#374151;margin-top:5px;line-height:1.4;">${m.note}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div style="font-size:9px;letter-spacing:2px;color:#374151;margin-bottom:10px;">IDEE PER OGNI PASTO — tocca per aprire</div>
+    ${pasti.map((p,pi)=>{
+      const isAp = state.pasto === pi;
+      return `
+      <div style="background:#161616;border:1px solid ${isAp?p.colore+"66":"#1f2937"};border-radius:12px;margin-bottom:8px;overflow:hidden;">
+        <button data-pasto="${pi}" style="width:100%;padding:14px 16px;background:none;border:none;display:flex;align-items:center;gap:12px;text-align:left;">
+          <div style="width:40px;height:40px;border-radius:10px;background:${p.colore}22;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${p.emoji}</div>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:800;color:#f1f5f9;">${p.pasto}</div>
+            <div style="font-size:11px;color:#4b5563;margin-top:2px;">⏰ ${p.orario}</div>
+          </div>
+          <span style="color:${isAp?p.colore:"#374151"};font-size:14px;flex-shrink:0;">${isAp?"▲":"▼"}</span>
+        </button>
+        ${isAp ? `
+        <div style="padding:0 16px 14px;border-top:1px solid #1f2937;">
+          <div style="font-size:9px;font-weight:800;color:#374151;letter-spacing:2px;margin:12px 0 8px;">3 IDEE — scegli quella che hai in casa</div>
+          ${p.idee.map(idea=>`
+            <div style="background:#0c0c0c;border:1px solid ${p.colore}33;border-radius:10px;padding:12px;margin-bottom:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                <div style="font-size:13px;font-weight:700;color:#e2e8f0;flex:1;">${idea.nome}</div>
+                <span style="background:${p.colore}22;color:${p.colore};font-size:10px;font-weight:800;padding:2px 8px;border-radius:5px;flex-shrink:0;">${idea.macro}</span>
+              </div>
+              <div style="font-size:11px;color:#4b5563;margin-top:6px;line-height:1.4;">${idea.note}</div>
+            </div>`).join('')}
+        </div>` : ""}
+      </div>`;
+    }).join('')}
+    <div style="background:#0a1f14;border:1px solid #14532d55;border-radius:12px;padding:14px;margin-top:4px;">
+      <div style="font-size:10px;font-weight:800;color:#22c55e;letter-spacing:1px;margin-bottom:8px;">📌 LE 3 REGOLE PER MASSA + PRESTAZIONE CALCIO</div>
+      ${["Mangia PRIMA di allenarti — almeno 60 min prima. Il glicogeno muscolare è il carburante degli sprint. Stomaco vuoto = prestazione dimezzata.",
+         "Proteine entro 30 min dal fine allenamento — questa è la finestra anabolica. Yogurt greco, latte, ricotta. Non saltarla mai.",
+         "Carboidrati alti nei giorni di corsa — il long run del sabato brucia 500-700 kcal. Compensa aggiungendo una porzione extra di pasta o riso."]
+        .map((r,i)=>`
+        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:${i<2?"1px solid #1f2937":"none"};">
+          <span style="color:#22c55e;font-size:12px;flex-shrink:0;margin-top:1px;">✓</span>
+          <span style="font-size:11px;color:#4b5563;line-height:1.5;">${r}</span>
+        </div>`).join('')}
+    </div>
+    <div style="height:24px;"></div>
+  </div>`;
+}
+
+function attachEvents() {
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>setState({tab:b.dataset.tab,aperto:null,pasto:null}));
+  document.querySelectorAll('[data-giorno]').forEach(b=>b.onclick=()=>setState({giorno:parseInt(b.dataset.giorno),aperto:null}));
+  document.querySelectorAll('[data-key]').forEach(b=>b.onclick=()=>setState({aperto:state.aperto===b.dataset.key?null:b.dataset.key}));
+  document.querySelectorAll('[data-pasto]').forEach(b=>b.onclick=()=>setState({pasto:state.pasto===parseInt(b.dataset.pasto)?null:parseInt(b.dataset.pasto)}));
+}
+
+render();
+</script>
+</body>
+</html>

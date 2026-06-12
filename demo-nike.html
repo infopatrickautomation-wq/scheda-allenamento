@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Nike Style — PatrickAI Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+html, body { width:100%; height:100%; margin:0; overflow:hidden; background:#0a0a0a; }
+.deck-viewport { position:fixed; inset:0; overflow:hidden; background:#0a0a0a; }
+.deck-stage { position:absolute; left:0; top:0; width:1920px; height:1080px; overflow:hidden; transform-origin:0 0; }
+.slide { position:absolute; inset:0; width:1920px; height:1080px; overflow:hidden; visibility:hidden; opacity:0; pointer-events:none; }
+.slide.active { visibility:visible; opacity:1; pointer-events:auto; z-index:1; }
+@media (prefers-reduced-motion:reduce){ *,*::before,*::after { animation-duration:0.01ms !important; } }
+
+.s-nike {
+  background: #0a0a0a;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+/* Full bleed diagonal background split */
+.nike-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.nike-bg-white {
+  position: absolute;
+  top: 0; right: 0;
+  width: 820px; height: 1080px;
+  background: #f5f5f3;
+  clip-path: polygon(18% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+/* Large background text */
+.nike-bg-text {
+  position: absolute;
+  bottom: -40px;
+  left: -20px;
+  font-size: 520px;
+  line-height: 1;
+  color: rgba(255,255,255,0.025);
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Left content */
+.nike-left {
+  position: absolute;
+  left: 100px; top: 0; bottom: 0;
+  width: 1000px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;
+}
+
+.nike-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 24px;
+  animation: fadeIn 0.4s ease both;
+}
+
+.nike-title {
+  font-size: 220px;
+  line-height: 0.88;
+  color: #fff;
+  margin: 0;
+  animation: slideRight 0.6s ease both;
+  letter-spacing: -0.01em;
+}
+.nike-title-accent {
+  font-size: 220px;
+  line-height: 0.88;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(255,255,255,0.25);
+  margin: 0;
+  display: block;
+  animation: slideRight 0.6s 0.08s ease both;
+}
+
+.nike-sub {
+  margin-top: 56px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.04em;
+  animation: fadeUp 0.5s 0.3s ease both;
+}
+
+/* Right content — white panel */
+.nike-right {
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 740px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 80px 100px 80px 160px;
+  z-index: 2;
+}
+
+.nike-swoosh {
+  font-size: 96px;
+  color: #111;
+  line-height: 1;
+  margin-bottom: 40px;
+  animation: fadeIn 0.5s 0.2s ease both;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+}
+
+.nike-cta {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 64px;
+  color: #111;
+  line-height: 1.05;
+  margin: 0 0 40px;
+  animation: fadeUp 0.5s 0.35s ease both;
+}
+
+.nike-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  background: #111;
+  color: #fff;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 20px 40px;
+  border: none;
+  cursor: pointer;
+  animation: fadeUp 0.5s 0.5s ease both;
+}
+.nike-btn-arrow {
+  font-size: 24px;
+  transform: translateX(0);
+  transition: transform 0.2s ease;
+}
+
+.nike-stats {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeUp 0.5s 0.6s ease both;
+}
+.nike-stat-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+.nike-stat-n {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 52px;
+  color: #111;
+  line-height: 1;
+}
+.nike-stat-l {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  color: #666;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Horizontal accent bar */
+.nike-bar {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 1100px; height: 6px;
+  background: linear-gradient(to right, #fff 0%, transparent 100%);
+  animation: expand 0.8s 0.1s ease both;
+}
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes slideRight { from { opacity:0; transform:translateX(-40px); } to { opacity:1; transform:translateX(0); } }
+@keyframes expand { from { width:0; } to { width:1100px; } }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+  <div class="deck-stage" id="stage">
+    <div class="slide active s-nike">
+      <div class="nike-bg">
+        <div class="nike-bg-white"></div>
+        <div class="nike-bg-text">AI</div>
+      </div>
+
+      <div class="nike-left">
+        <div class="nike-tag">PatrickAI Automation — 2026</div>
+        <h1 class="nike-title">JUST</h1>
+        <span class="nike-title-accent">AUTOMATE</span>
+        <p class="nike-sub">— Smetti di farlo a mano. Comincia a scalare.</p>
+      </div>
+
+      <div class="nike-right">
+        <div class="nike-swoosh">✦</div>
+        <h2 class="nike-cta">Il tuo<br>sistema<br>AI aspetta.</h2>
+        <div class="nike-btn">
+          Scopri come <span class="nike-btn-arrow">→</span>
+        </div>
+        <div class="nike-stats">
+          <div class="nike-stat-row">
+            <span class="nike-stat-n">+340%</span>
+            <span class="nike-stat-l">lead in 60 giorni</span>
+          </div>
+          <div class="nike-stat-row">
+            <span class="nike-stat-n">12h</span>
+            <span class="nike-stat-l">risparmiate a settimana</span>
+          </div>
+          <div class="nike-stat-row">
+            <span class="nike-stat-n">24/7</span>
+            <span class="nike-stat-l">attivo senza supervisione</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="nike-bar"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  function fit(){
+    var s=document.getElementById('stage');
+    var vw=window.innerWidth,vh=window.innerHeight;
+    var sc=Math.min(vw/1920,vh/1080);
+    var ox=(vw-1920*sc)/2,oy=(vh-1080*sc)/2;
+    s.style.transform='translate('+ox+'px,'+oy+'px) scale('+sc+')';
+  }
+  fit(); window.addEventListener('resize',fit);
+})();
+</script>
+</body>
+</html>

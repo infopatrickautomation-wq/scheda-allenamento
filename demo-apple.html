@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Apple Style — PatrickAI Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+html, body { width:100%; height:100%; margin:0; overflow:hidden; background:#000; }
+.deck-viewport { position:fixed; inset:0; overflow:hidden; background:#000; }
+.deck-stage { position:absolute; left:0; top:0; width:1920px; height:1080px; overflow:hidden; transform-origin:0 0; }
+.slide { position:absolute; inset:0; width:1920px; height:1080px; overflow:hidden; visibility:hidden; opacity:0; pointer-events:none; }
+.slide.active { visibility:visible; opacity:1; pointer-events:auto; z-index:1; }
+@media (prefers-reduced-motion:reduce){ *,*::before,*::after { animation-duration:0.01ms !important; } }
+
+.s-apple {
+  background: #000;
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Subtle radial glow center */
+.apple-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 1200px 700px at 50% 50%, rgba(100,100,120,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Product-style hero image placeholder — abstract sphere */
+.apple-sphere {
+  position: absolute;
+  width: 600px; height: 600px;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -56%);
+  border-radius: 50%;
+  background: conic-gradient(from 200deg,
+    #1a1a2e 0deg,
+    #2d2d5e 60deg,
+    #6464c8 120deg,
+    #9898e8 160deg,
+    #c8c8ff 190deg,
+    #8888cc 220deg,
+    #4444aa 260deg,
+    #1a1a2e 360deg
+  );
+  filter: blur(0px);
+  animation: sphereRotate 20s linear infinite;
+  box-shadow:
+    0 0 120px rgba(100,100,200,0.3),
+    0 0 60px rgba(150,150,255,0.2),
+    inset 0 0 80px rgba(0,0,0,0.4);
+}
+.apple-sphere::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.25) 0%, transparent 50%);
+}
+
+/* Text block */
+.apple-content {
+  position: absolute;
+  bottom: 160px;
+  left: 0; right: 0;
+  text-align: center;
+}
+.apple-category {
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 16px;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+.apple-title {
+  font-size: 96px;
+  font-weight: 200;
+  letter-spacing: -0.03em;
+  color: #fff;
+  line-height: 1;
+  margin: 0 0 20px;
+  animation: fadeUp 0.8s 0.35s ease both;
+}
+.apple-title strong {
+  font-weight: 400;
+}
+.apple-sub {
+  font-size: 28px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.01em;
+  animation: fadeUp 0.8s 0.5s ease both;
+}
+
+/* Thin separator line */
+.apple-line {
+  position: absolute;
+  bottom: 128px;
+  left: 50%; transform: translateX(-50%);
+  width: 1px; height: 40px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3));
+  animation: fadeIn 0.8s 0.7s ease both;
+}
+
+/* Nav dots */
+.apple-nav {
+  position: absolute;
+  bottom: 56px;
+  left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  animation: fadeIn 0.8s 0.8s ease both;
+}
+.apple-nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+}
+.apple-nav-dot.active { background: rgba(255,255,255,0.7); }
+
+/* Top logo */
+.apple-logo {
+  position: absolute;
+  top: 52px;
+  left: 0; right: 0;
+  text-align: center;
+  font-size: 36px;
+  color: rgba(255,255,255,0.8);
+  animation: fadeIn 0.6s ease both;
+}
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes sphereRotate { from { filter:hue-rotate(0deg); } to { filter:hue-rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+  <div class="deck-stage" id="stage">
+    <div class="slide active s-apple">
+      <div class="apple-glow"></div>
+
+      <div class="apple-logo">⬡</div>
+
+      <div class="apple-sphere"></div>
+
+      <div class="apple-content">
+        <div class="apple-category">PatrickAI Automation</div>
+        <h1 class="apple-title">Automazione.<br><strong>Reinventata.</strong></h1>
+        <p class="apple-sub">Sistemi AI su misura per la tua azienda.</p>
+      </div>
+
+      <div class="apple-line"></div>
+
+      <div class="apple-nav">
+        <div class="apple-nav-dot active"></div>
+        <div class="apple-nav-dot"></div>
+        <div class="apple-nav-dot"></div>
+        <div class="apple-nav-dot"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  function fit(){
+    var s=document.getElementById('stage');
+    var vw=window.innerWidth,vh=window.innerHeight;
+    var sc=Math.min(vw/1920,vh/1080);
+    var ox=(vw-1920*sc)/2,oy=(vh-1080*sc)/2;
+    s.style.transform='translate('+ox+'px,'+oy+'px) scale('+sc+')';
+  }
+  fit(); window.addEventListener('resize',fit);
+})();
+</script>
+</body>
+</html>

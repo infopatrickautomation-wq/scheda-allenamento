@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>AI Agent per PMI — Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* === VIEWPORT BASE === */
+html, body { width:100%; height:100%; margin:0; overflow:hidden; background:#050505; }
+.deck-viewport { position:fixed; inset:0; overflow:hidden; background:#050505; }
+.deck-stage { position:absolute; left:0; top:0; width:1920px; height:1080px; overflow:hidden; transform-origin:0 0; background:#050505; }
+.slide { position:absolute; inset:0; width:1920px; height:1080px; overflow:hidden; visibility:hidden; opacity:0; pointer-events:none; }
+.slide.active { visibility:visible; opacity:1; pointer-events:auto; z-index:1; }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration:0.01ms !important; transition-duration:0.2s !important; } }
+
+/* === SLIDE 1 === */
+:root {
+  --bg: #050505;
+  --blue: #4B7BFF;
+  --blue-glow: rgba(75,123,255,0.18);
+  --text: #f0f0f0;
+  --muted: rgba(240,240,240,0.45);
+}
+
+.s1 {
+  background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Ambient glow background */
+.s1-bg {
+  position: absolute;
+  inset: 0;
+}
+.s1-glow1 {
+  position: absolute;
+  width: 900px; height: 900px;
+  left: -200px; top: -100px;
+  background: radial-gradient(ellipse, rgba(75,123,255,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.s1-glow2 {
+  position: absolute;
+  width: 700px; height: 700px;
+  right: 100px; bottom: -100px;
+  background: radial-gradient(ellipse, rgba(120,80,255,0.09) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+/* Grid texture overlay */
+.s1-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(75,123,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(75,123,255,0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+/* Left column */
+.s1-left {
+  position: absolute;
+  left: 140px; top: 0; bottom: 0;
+  width: 860px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.s1-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border: 1px solid rgba(75,123,255,0.35);
+  border-radius: 40px;
+  width: fit-content;
+  margin-bottom: 52px;
+  animation: fadeUp 0.7s ease both;
+}
+.s1-badge-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 10px var(--blue);
+  animation: pulse 2s ease infinite;
+}
+.s1-badge-text {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.s1-title {
+  font-family: 'Fraunces', serif;
+  font-size: 118px;
+  font-weight: 700;
+  line-height: 0.95;
+  color: var(--text);
+  margin: 0 0 12px;
+  animation: fadeUp 0.7s 0.15s ease both;
+}
+.s1-title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--blue);
+}
+
+.s1-sub {
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 640px;
+  margin: 32px 0 0;
+  animation: fadeUp 0.7s 0.3s ease both;
+}
+
+/* Right column — visual element */
+.s1-right {
+  position: absolute;
+  right: 100px; top: 50%;
+  transform: translateY(-50%);
+  width: 680px; height: 680px;
+  animation: fadeIn 1s 0.4s ease both;
+}
+
+.s1-orb {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 180deg,
+    rgba(75,123,255,0.0) 0deg,
+    rgba(75,123,255,0.25) 90deg,
+    rgba(120,80,255,0.15) 180deg,
+    rgba(75,123,255,0.0) 360deg
+  );
+  animation: spin 12s linear infinite;
+}
+.s1-orb::before {
+  content: '';
+  position: absolute;
+  inset: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(75,123,255,0.2);
+}
+.s1-orb::after {
+  content: '';
+  position: absolute;
+  inset: 120px;
+  border-radius: 50%;
+  border: 1px solid rgba(75,123,255,0.1);
+  animation: spin 8s linear infinite reverse;
+}
+.s1-orb-inner {
+  position: absolute;
+  inset: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(75,123,255,0.25) 0%, rgba(75,123,255,0.05) 60%, transparent 100%);
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Floating nodes */
+.s1-node {
+  position: absolute;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 20px var(--blue), 0 0 40px rgba(75,123,255,0.4);
+}
+.s1-node:nth-child(1) { top: 80px; left: 340px; animation: float1 5s ease-in-out infinite; }
+.s1-node:nth-child(2) { top: 320px; left: 40px; animation: float2 6s ease-in-out infinite; width:8px;height:8px; }
+.s1-node:nth-child(3) { bottom: 160px; right: 60px; animation: float1 4.5s ease-in-out infinite reverse; }
+.s1-node:nth-child(4) { top: 180px; right: 80px; animation: float2 7s ease-in-out infinite; width:6px;height:6px; }
+.s1-node:nth-child(5) { bottom: 80px; left: 280px; animation: float1 5.5s ease-in-out infinite; width:10px;height:10px; }
+
+/* Bottom strip */
+.s1-bottom {
+  position: absolute;
+  bottom: 60px;
+  left: 140px; right: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 32px;
+  animation: fadeUp 0.7s 0.5s ease both;
+}
+.s1-stat {
+  text-align: center;
+}
+.s1-stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+.s1-stat-label {
+  font-size: 17px;
+  color: var(--muted);
+  margin-top: 6px;
+  font-weight: 300;
+}
+.s1-divider { width: 1px; height: 50px; background: rgba(255,255,255,0.1); }
+
+/* Brand tag */
+.s1-brand {
+  position: absolute;
+  top: 54px; right: 80px;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+@keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+@keyframes breathe { 0%,100% { transform:scale(1); opacity:0.8; } 50% { transform:scale(1.08); opacity:1; } }
+@keyframes float1 { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-18px); } }
+@keyframes float2 { 0%,100% { transform:translateY(0) translateX(0); } 50% { transform:translateY(-12px) translateX(8px); } }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+  <div class="deck-stage" id="stage">
+
+    <div class="slide active s1">
+      <div class="s1-bg">
+        <div class="s1-glow1"></div>
+        <div class="s1-glow2"></div>
+        <div class="s1-grid"></div>
+      </div>
+
+      <div class="s1-brand">PatrickAI</div>
+
+      <div class="s1-left">
+        <div class="s1-badge">
+          <div class="s1-badge-dot"></div>
+          <span class="s1-badge-text">AI Agent System</span>
+        </div>
+        <h1 class="s1-title">
+          Sistemi AI<br>che <em>lavorano</em><br>per te
+        </h1>
+        <p class="s1-sub">Automazione intelligente per PMI italiane.<br>Mentre tu pensi alla strategia, il sistema esegue.</p>
+      </div>
+
+      <div class="s1-right">
+        <div class="s1-orb">
+          <div class="s1-orb-inner"></div>
+        </div>
+        <div class="s1-node"></div>
+        <div class="s1-node"></div>
+        <div class="s1-node"></div>
+        <div class="s1-node"></div>
+        <div class="s1-node"></div>
+      </div>
+
+      <div class="s1-bottom">
+        <div class="s1-stat">
+          <div class="s1-stat-num">10+</div>
+          <div class="s1-stat-label">ore risparmiate/settimana</div>
+        </div>
+        <div class="s1-divider"></div>
+        <div class="s1-stat">
+          <div class="s1-stat-num">24/7</div>
+          <div class="s1-stat-label">operativo senza supervisione</div>
+        </div>
+        <div class="s1-divider"></div>
+        <div class="s1-stat">
+          <div class="s1-stat-num">€0</div>
+          <div class="s1-stat-label">costo per automazione aggiuntiva</div>
+        </div>
+        <div class="s1-divider"></div>
+        <div class="s1-stat">
+          <div class="s1-stat-num">3x</div>
+          <div class="s1-stat-label">velocità di risposta ai lead</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+(function(){
+  function fit(){
+    var s=document.getElementById('stage');
+    var vw=window.innerWidth, vh=window.innerHeight;
+    var sc=Math.min(vw/1920, vh/1080);
+    var ox=(vw-1920*sc)/2, oy=(vh-1080*sc)/2;
+    s.style.transform='translate('+ox+'px,'+oy+'px) scale('+sc+')';
+  }
+  fit(); window.addEventListener('resize',fit);
+})();
+</script>
+</body>
+</html>

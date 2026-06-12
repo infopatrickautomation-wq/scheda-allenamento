@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PatrickAI — RoboNuggets Style</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1C1A14;
+    --accent:#2A5C3F;
+    --text:#EDEAE3;
+    --muted:#9c978a;
+  }
+  *{box-sizing:border-box;}
+  html, body { width:100%; height:100%; margin:0; overflow:hidden; background:var(--bg); }
+  .deck-viewport { position:fixed; inset:0; overflow:hidden; background:#0f0e0a; }
+  .deck-stage { position:absolute; left:0; top:0; width:1920px; height:1080px; overflow:hidden; transform-origin:0 0;
+    background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; }
+
+  /* texture / grain glow */
+  .glow{position:absolute; width:1100px; height:1100px; border-radius:50%;
+    background:radial-gradient(circle, rgba(42,92,63,.28) 0%, rgba(42,92,63,0) 62%);
+    top:-380px; right:-280px; filter:blur(10px); pointer-events:none;}
+  .grain{position:absolute; inset:0; opacity:.04; pointer-events:none;
+    background-image:radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px);
+    background-size:3px 3px;}
+
+  .frame{position:absolute; inset:70px; border:1px solid rgba(237,234,227,.10); border-radius:6px; pointer-events:none;}
+
+  .content{position:absolute; inset:0; padding:130px 140px; display:flex; gap:90px;}
+  .left{flex:1.25; display:flex; flex-direction:column; justify-content:center;}
+  .right{flex:1; display:flex; flex-direction:column; justify-content:center; gap:26px;}
+
+  .label{font-size:18px; letter-spacing:.32em; text-transform:uppercase; color:var(--accent);
+    font-weight:600; margin-bottom:46px; opacity:0; transform:translateY(14px);
+    animation:rise .7s .2s cubic-bezier(.16,1,.3,1) forwards;}
+  .label .dot{color:var(--muted); margin:0 14px;}
+
+  h1{font-family:'Fraunces',serif; font-weight:500; font-size:108px; line-height:1.02;
+    letter-spacing:-.02em; margin:0 0 40px; max-width:920px;}
+  h1 .line{display:block; opacity:0; transform:translateY(26px);}
+  h1 .line:nth-child(1){animation:rise .8s .45s cubic-bezier(.16,1,.3,1) forwards;}
+  h1 .line:nth-child(2){animation:rise .8s .65s cubic-bezier(.16,1,.3,1) forwards;}
+  h1 .line:nth-child(3){animation:rise .8s .85s cubic-bezier(.16,1,.3,1) forwards;}
+
+  .hl { position: relative; display: inline; }
+  .hl::before {
+    content: '';
+    position: absolute;
+    inset: 2px -8px -4px -8px;
+    background: var(--accent);
+    opacity: 0;
+    transform: scaleX(0); transform-origin: left;
+    z-index: -1;
+    animation: hlReveal .5s 1.5s cubic-bezier(.16,1,.3,1) forwards;
+    border-radius:4px;
+  }
+  .hl-text {
+    position: relative; z-index: 1;
+    animation: hlTextColor .5s 1.5s forwards;
+  }
+  @keyframes hlReveal { to { transform:scaleX(1); opacity:1; } }
+  @keyframes hlTextColor { to { color:#EDEAE3; } }
+
+  .sub{font-size:27px; color:var(--muted); font-weight:400; max-width:640px; line-height:1.5;
+    opacity:0; transform:translateY(16px); animation:rise .8s 1.05s cubic-bezier(.16,1,.3,1) forwards;}
+
+  .brandtag{margin-top:58px; display:flex; align-items:center; gap:16px;
+    opacity:0; animation:fade .8s 1.8s forwards;}
+  .brandtag .mark{width:46px; height:46px; border-radius:12px; background:var(--accent);
+    display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif;
+    font-weight:600; font-size:24px; color:var(--text);}
+  .brandtag .name{font-weight:600; font-size:21px; letter-spacing:.02em;}
+
+  .card{background:rgba(237,234,227,.04); border:1px solid rgba(237,234,227,.08);
+    border-radius:18px; padding:34px 36px; display:flex; gap:24px; align-items:flex-start;
+    opacity:0; transform:translateX(40px);}
+  .card:nth-child(1){animation:slideIn .8s .9s cubic-bezier(.16,1,.3,1) forwards;}
+  .card:nth-child(2){animation:slideIn .8s 1.1s cubic-bezier(.16,1,.3,1) forwards;}
+  .card:nth-child(3){animation:slideIn .8s 1.3s cubic-bezier(.16,1,.3,1) forwards;}
+  .card .num{font-family:'Fraunces',serif; font-size:34px; font-weight:500; color:var(--accent);
+    line-height:1; min-width:46px;}
+  .card .body .t{font-size:25px; font-weight:600; margin-bottom:8px;}
+  .card .body .d{font-size:18px; color:var(--muted); line-height:1.45;}
+
+  @keyframes rise{to{opacity:1; transform:translateY(0);}}
+  @keyframes fade{to{opacity:1;}}
+  @keyframes slideIn{to{opacity:1; transform:translateX(0);}}
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+  <div class="deck-stage" id="stage">
+    <div class="glow"></div>
+    <div class="grain"></div>
+    <div class="frame"></div>
+    <div class="content">
+      <div class="left">
+        <div class="label">— SISTEMI AI <span class="dot">·</span> AUTOMAZIONE PMI</div>
+        <h1>
+          <span class="line">Costruiamo</span>
+          <span class="line">sistemi <span class="hl"><span class="hl-text">AI</span></span> che</span>
+          <span class="line">lavorano per te.</span>
+        </h1>
+        <p class="sub">Automazione intelligente per PMI italiane. Cattura, segui e converti — mentre tu ti concentri sul lavoro che conta.</p>
+        <div class="brandtag">
+          <div class="mark">P</div>
+          <div class="name">PatrickAI Automation</div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="card">
+          <div class="num">01</div>
+          <div class="body">
+            <div class="t">Cattura lead</div>
+            <div class="d">Ogni contatto intercettato e qualificato in tempo reale, 24/7.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="num">02</div>
+          <div class="body">
+            <div class="t">Follow-up AI</div>
+            <div class="d">Messaggi personalizzati inviati al momento giusto, senza intervento.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="num">03</div>
+          <div class="body">
+            <div class="t">Report automatico</div>
+            <div class="d">Risultati e metriche sintetizzati e recapitati ogni mattina.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  function fit(){
+    var s=document.getElementById('stage');
+    var vw=window.innerWidth,vh=window.innerHeight;
+    var sc=Math.min(vw/1920,vh/1080);
+    var ox=(vw-1920*sc)/2,oy=(vh-1080*sc)/2;
+    s.style.transform='translate('+ox+'px,'+oy+'px) scale('+sc+')';
+  }
+  fit(); window.addEventListener('resize',fit);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PatrickAI — Just Automate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;900&display=swap" rel="stylesheet">
+<style>
+  html, body { width:100%; height:100%; margin:0; overflow:hidden; background:#000; }
+  .deck-viewport { position:fixed; inset:0; overflow:hidden; }
+  .deck-stage { position:absolute; left:0; top:0; width:1920px; height:1080px; overflow:hidden; transform-origin:0 0; font-family:'Barlow Condensed', sans-serif; }
+
+  /* --- Split background: white top half, black bottom half, hard horizontal cut --- */
+  .half-white { position:absolute; left:0; top:0; width:1920px; height:540px; background:#FFFFFF; }
+  .half-black { position:absolute; left:0; top:540px; width:1920px; height:540px; background:#111111; }
+
+  /* --- Top-left label --- */
+  .label {
+    position:absolute; left:80px; top:64px;
+    font-weight:400; font-size:18px; color:#111111;
+    letter-spacing:0.3em; text-transform:uppercase;
+    z-index:10;
+  }
+
+  /* --- Headline that crosses the cut ---
+     mix-blend-mode: difference flips the headline color against whatever is behind it.
+     On white (top) -> reads black; on black (bottom) -> reads white. The word changes
+     color exactly at the horizontal boundary. */
+  .headline {
+    position:absolute;
+    left:0; right:0;
+    top:540px;
+    transform:translateY(-50%) translateX(-60px);
+    text-align:center;
+    font-weight:900;
+    font-size:240px;
+    line-height:0.9;
+    letter-spacing:-0.01em;
+    color:#FFFFFF;
+    mix-blend-mode:difference;
+    white-space:nowrap;
+    z-index:20;
+    opacity:0;
+    animation:slideIn 0.6s cubic-bezier(.22,.61,.36,1) 0.2s forwards;
+  }
+  @keyframes slideIn {
+    from { transform:translateY(-50%) translateX(-60px); opacity:0; }
+    to   { transform:translateY(-50%) translateX(0);     opacity:1; }
+  }
+
+  /* --- Stats row inside black panel --- */
+  .stats {
+    position:absolute;
+    left:80px; bottom:120px;
+    font-weight:400; font-size:30px; color:#FFFFFF;
+    letter-spacing:0.18em; text-transform:uppercase;
+    z-index:10;
+    opacity:0;
+    animation:fadeUp 0.6s ease 0.7s forwards;
+  }
+  .stats .sep { color:#FA5400; padding:0 14px; font-weight:900; }
+  @keyframes fadeUp {
+    from { transform:translateY(20px); opacity:0; }
+    to   { transform:translateY(0);    opacity:1; }
+  }
+
+  /* --- Swoosh-like symbol: a single stylised orange comma, bottom-right --- */
+  .swoosh {
+    position:absolute;
+    right:80px; bottom:40px;
+    font-weight:900; font-size:150px; line-height:1;
+    color:#FA5400;
+    z-index:15;
+    transform:rotate(-8deg);
+    opacity:0;
+    animation:swooshIn 0.5s ease 0.9s forwards;
+  }
+  @keyframes swooshIn {
+    from { transform:rotate(-8deg) translateX(40px); opacity:0; }
+    to   { transform:rotate(-8deg) translateX(0);    opacity:1; }
+  }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+  <div class="deck-stage" id="stage">
+    <div class="half-white"></div>
+    <div class="half-black"></div>
+
+    <div class="label">PATRICKAUTOMATION</div>
+
+    <h1 class="headline">JUST AUTOMATE.</h1>
+
+    <div class="stats">
+      10H RISPARMIATE <span class="sep">&middot;</span>
+      340% PI&Ugrave; LEAD <span class="sep">&middot;</span>
+      24/7 ATTIVO
+    </div>
+
+    <div class="swoosh">&rsquo;</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  function fit(){
+    var s=document.getElementById('stage');
+    var vw=window.innerWidth,vh=window.innerHeight;
+    var sc=Math.min(vw/1920,vh/1080);
+    var ox=(vw-1920*sc)/2,oy=(vh-1080*sc)/2;
+    s.style.transform='translate('+ox+'px,'+oy+'px) scale('+sc+')';
+  }
+  fit(); window.addEventListener('resize',fit);
+})();
+</script>
+</body>
+</html>

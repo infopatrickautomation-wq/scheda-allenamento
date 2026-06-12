@@ -20,6 +20,10 @@
   .deck-stage { position:absolute; left:0; top:0; width:1920px; height:1080px; overflow:hidden; transform-origin:0 0;
     background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; }
 
+  .slide { position:absolute; inset:0; width:1920px; height:1080px; overflow:hidden;
+           visibility:hidden; opacity:0; pointer-events:none; }
+  .slide.active { visibility:visible; opacity:1; pointer-events:auto; }
+
   /* texture / grain glow */
   .glow{position:absolute; width:1100px; height:1100px; border-radius:50%;
     background:radial-gradient(circle, rgba(42,92,63,.28) 0%, rgba(42,92,63,0) 62%);
@@ -35,16 +39,16 @@
   .right{flex:1; display:flex; flex-direction:column; justify-content:center; gap:26px;}
 
   .label{font-size:18px; letter-spacing:.32em; text-transform:uppercase; color:var(--accent);
-    font-weight:600; margin-bottom:46px; opacity:0; transform:translateY(14px);
-    animation:rise .7s .2s cubic-bezier(.16,1,.3,1) forwards;}
+    font-weight:600; margin-bottom:46px; opacity:0; transform:translateY(14px);}
+  .slide.active .label{animation:rise .7s .2s cubic-bezier(.16,1,.3,1) forwards;}
   .label .dot{color:var(--muted); margin:0 14px;}
 
   h1{font-family:'Fraunces',serif; font-weight:500; font-size:108px; line-height:1.02;
     letter-spacing:-.02em; margin:0 0 40px; max-width:920px;}
   h1 .line{display:block; opacity:0; transform:translateY(26px);}
-  h1 .line:nth-child(1){animation:rise .8s .45s cubic-bezier(.16,1,.3,1) forwards;}
-  h1 .line:nth-child(2){animation:rise .8s .65s cubic-bezier(.16,1,.3,1) forwards;}
-  h1 .line:nth-child(3){animation:rise .8s .85s cubic-bezier(.16,1,.3,1) forwards;}
+  .slide.active h1 .line:nth-child(1){animation:rise .8s .45s cubic-bezier(.16,1,.3,1) forwards;}
+  .slide.active h1 .line:nth-child(2){animation:rise .8s .65s cubic-bezier(.16,1,.3,1) forwards;}
+  .slide.active h1 .line:nth-child(3){animation:rise .8s .85s cubic-bezier(.16,1,.3,1) forwards;}
 
   .hl { position: relative; display: inline; }
   .hl::before {
@@ -55,21 +59,20 @@
     opacity: 0;
     transform: scaleX(0); transform-origin: left;
     z-index: -1;
-    animation: hlReveal .5s 1.5s cubic-bezier(.16,1,.3,1) forwards;
     border-radius:4px;
   }
-  .hl-text {
-    position: relative; z-index: 1;
-    animation: hlTextColor .5s 1.5s forwards;
-  }
+  .slide.active .hl::before{ animation: hlReveal .5s 1.5s cubic-bezier(.16,1,.3,1) forwards; }
+  .hl-text { position: relative; z-index: 1; }
+  .slide.active .hl-text{ animation: hlTextColor .5s 1.5s forwards; }
   @keyframes hlReveal { to { transform:scaleX(1); opacity:1; } }
   @keyframes hlTextColor { to { color:#EDEAE3; } }
 
   .sub{font-size:27px; color:var(--muted); font-weight:400; max-width:640px; line-height:1.5;
-    opacity:0; transform:translateY(16px); animation:rise .8s 1.05s cubic-bezier(.16,1,.3,1) forwards;}
+    opacity:0; transform:translateY(16px);}
+  .slide.active .sub{animation:rise .8s 1.05s cubic-bezier(.16,1,.3,1) forwards;}
 
-  .brandtag{margin-top:58px; display:flex; align-items:center; gap:16px;
-    opacity:0; animation:fade .8s 1.8s forwards;}
+  .brandtag{margin-top:58px; display:flex; align-items:center; gap:16px; opacity:0;}
+  .slide.active .brandtag{animation:fade .8s 1.8s forwards;}
   .brandtag .mark{width:46px; height:46px; border-radius:12px; background:var(--accent);
     display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif;
     font-weight:600; font-size:24px; color:var(--text);}
@@ -78,13 +81,52 @@
   .card{background:rgba(237,234,227,.04); border:1px solid rgba(237,234,227,.08);
     border-radius:18px; padding:34px 36px; display:flex; gap:24px; align-items:flex-start;
     opacity:0; transform:translateX(40px);}
-  .card:nth-child(1){animation:slideIn .8s .9s cubic-bezier(.16,1,.3,1) forwards;}
-  .card:nth-child(2){animation:slideIn .8s 1.1s cubic-bezier(.16,1,.3,1) forwards;}
-  .card:nth-child(3){animation:slideIn .8s 1.3s cubic-bezier(.16,1,.3,1) forwards;}
+  .slide.active .card:nth-child(1){animation:slideIn .8s .9s cubic-bezier(.16,1,.3,1) forwards;}
+  .slide.active .card:nth-child(2){animation:slideIn .8s 1.1s cubic-bezier(.16,1,.3,1) forwards;}
+  .slide.active .card:nth-child(3){animation:slideIn .8s 1.3s cubic-bezier(.16,1,.3,1) forwards;}
   .card .num{font-family:'Fraunces',serif; font-size:34px; font-weight:500; color:var(--accent);
     line-height:1; min-width:46px;}
   .card .body .t{font-size:25px; font-weight:600; margin-bottom:8px;}
   .card .body .d{font-size:18px; color:var(--muted); line-height:1.45;}
+
+  /* ===== SLIDE 2 — flow orizzontale ===== */
+  .s2content{position:absolute; inset:0; padding:130px 140px; display:flex; flex-direction:column; justify-content:center;}
+  .s2 h1{font-size:96px; margin-bottom:80px;}
+  .flow{display:flex; align-items:stretch; gap:0;}
+  .flowstep{flex:1; background:rgba(237,234,227,.04); border:1px solid rgba(237,234,227,.08);
+    border-radius:18px; padding:42px 40px; display:flex; flex-direction:column; gap:18px;
+    opacity:0; transform:translateY(36px);}
+  .slide.active .flowstep:nth-child(1){animation:rise .8s .9s cubic-bezier(.16,1,.3,1) forwards;}
+  .slide.active .flowstep:nth-child(3){animation:rise .8s 1.15s cubic-bezier(.16,1,.3,1) forwards;}
+  .slide.active .flowstep:nth-child(5){animation:rise .8s 1.4s cubic-bezier(.16,1,.3,1) forwards;}
+  .flowstep .snum{font-family:'Fraunces',serif; font-size:38px; font-weight:500; color:var(--accent); line-height:1;}
+  .flowstep .st{font-size:28px; font-weight:600;}
+  .flowstep .sd{font-size:19px; color:var(--muted); line-height:1.45;}
+  .flowarrow{display:flex; align-items:center; justify-content:center; padding:0 26px;
+    font-size:48px; color:var(--accent); font-weight:300; opacity:0;}
+  .slide.active .flowarrow:nth-child(2){animation:fade .6s 1.05s forwards;}
+  .slide.active .flowarrow:nth-child(4){animation:fade .6s 1.3s forwards;}
+
+  /* ===== SLIDE 3 — risultati / CTA ===== */
+  .s3content{position:absolute; inset:0; padding:130px 150px; display:flex; flex-direction:column; justify-content:center;}
+  .s3 .label{margin-bottom:36px;}
+  .s3 h1{font-size:100px; font-weight:500; margin-bottom:64px;}
+  .statgrid{display:grid; grid-template-columns:1fr 1fr; gap:30px; max-width:1180px;}
+  .statbox{background:rgba(237,234,227,.04); border:1px solid rgba(237,234,227,.08);
+    border-radius:18px; padding:40px 44px; display:flex; align-items:baseline; gap:26px;
+    opacity:0; transform:translateY(30px);}
+  .slide.active .statbox:nth-child(1){animation:rise .7s .9s cubic-bezier(.16,1,.3,1) forwards;}
+  .slide.active .statbox:nth-child(2){animation:rise .7s 1.05s cubic-bezier(.16,1,.3,1) forwards;}
+  .slide.active .statbox:nth-child(3){animation:rise .7s 1.2s cubic-bezier(.16,1,.3,1) forwards;}
+  .slide.active .statbox:nth-child(4){animation:rise .7s 1.35s cubic-bezier(.16,1,.3,1) forwards;}
+  .statbox .big{font-family:'Fraunces',serif; font-size:64px; font-weight:500; color:var(--accent); line-height:1; min-width:200px;}
+  .statbox .cap{font-size:22px; color:var(--text); font-weight:500; line-height:1.3;}
+  .ctarow{margin-top:60px; display:flex; align-items:center; gap:40px; opacity:0;}
+  .slide.active .ctarow{animation:fade .8s 1.6s forwards;}
+  .ctabtn{display:inline-flex; align-items:center; gap:16px; padding:22px 46px; border-radius:999px;
+    border:1.5px solid var(--accent); background:transparent; color:var(--text); font-size:25px; font-weight:600;
+    font-family:'DM Sans',sans-serif; cursor:pointer;}
+  .s3 .brandtag{margin-top:54px;}
 
   @keyframes rise{to{opacity:1; transform:translateY(0);}}
   @keyframes fade{to{opacity:1;}}
@@ -94,47 +136,111 @@
 <body>
 <div class="deck-viewport">
   <div class="deck-stage" id="stage">
-    <div class="glow"></div>
-    <div class="grain"></div>
-    <div class="frame"></div>
-    <div class="content">
-      <div class="left">
-        <div class="label">— SISTEMI AI <span class="dot">·</span> AUTOMAZIONE PMI</div>
+
+    <!-- ===== SLIDE 1 — HERO ===== -->
+    <div class="slide active" id="s1">
+      <div class="glow"></div>
+      <div class="grain"></div>
+      <div class="frame"></div>
+      <div class="content">
+        <div class="left">
+          <div class="label">— SISTEMI AI <span class="dot">·</span> AUTOMAZIONE PMI</div>
+          <h1>
+            <span class="line">Costruiamo</span>
+            <span class="line">sistemi <span class="hl"><span class="hl-text">AI</span></span> che</span>
+            <span class="line">lavorano per te.</span>
+          </h1>
+          <p class="sub">Automazione intelligente per PMI italiane. Cattura, segui e converti — mentre tu ti concentri sul lavoro che conta.</p>
+          <div class="brandtag">
+            <div class="mark">P</div>
+            <div class="name">PatrickAI Automation</div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="card">
+            <div class="num">01</div>
+            <div class="body">
+              <div class="t">Cattura lead</div>
+              <div class="d">Ogni contatto intercettato e qualificato in tempo reale, 24/7.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="num">02</div>
+            <div class="body">
+              <div class="t">Follow-up AI</div>
+              <div class="d">Messaggi personalizzati inviati al momento giusto, senza intervento.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="num">03</div>
+            <div class="body">
+              <div class="t">Report automatico</div>
+              <div class="d">Risultati e metriche sintetizzati e recapitati ogni mattina.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SLIDE 2 — COME FUNZIONA ===== -->
+    <div class="slide s2" id="s2">
+      <div class="glow"></div>
+      <div class="grain"></div>
+      <div class="frame"></div>
+      <div class="s2content">
+        <div class="label">— COME FUNZIONA <span class="dot">·</span> 3 PASSI</div>
         <h1>
-          <span class="line">Costruiamo</span>
-          <span class="line">sistemi <span class="hl"><span class="hl-text">AI</span></span> che</span>
-          <span class="line">lavorano per te.</span>
+          <span class="line">Il <span class="hl"><span class="hl-text">sistema</span></span> che lavora</span>
+          <span class="line">al posto tuo.</span>
         </h1>
-        <p class="sub">Automazione intelligente per PMI italiane. Cattura, segui e converti — mentre tu ti concentri sul lavoro che conta.</p>
+        <div class="flow">
+          <div class="flowstep">
+            <div class="snum">1</div>
+            <div class="st">Cattura</div>
+            <div class="sd">Intercetta ogni lead. Ogni form, ogni messaggio, ogni call viene registrato.</div>
+          </div>
+          <div class="flowarrow">&rarr;</div>
+          <div class="flowstep">
+            <div class="snum">2</div>
+            <div class="st">Qualifica</div>
+            <div class="sd">Qualifica e segmenta. L'AI valuta il contatto e lo assegna al flusso giusto.</div>
+          </div>
+          <div class="flowarrow">&rarr;</div>
+          <div class="flowstep">
+            <div class="snum">3</div>
+            <div class="st">Converte</div>
+            <div class="sd">Follow-up automatico. Email, messaggi e report inviati senza intervento.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SLIDE 3 — RISULTATI / CTA ===== -->
+    <div class="slide s3" id="s3">
+      <div class="glow"></div>
+      <div class="grain"></div>
+      <div class="frame"></div>
+      <div class="s3content">
+        <div class="label">— RISULTATI REALI <span class="dot">·</span> CLIENTI PATRICKAUTOMATION</div>
+        <h1>
+          <span class="line">Numeri che <span class="hl"><span class="hl-text">parlano</span></span>.</span>
+        </h1>
+        <div class="statgrid">
+          <div class="statbox"><div class="big">+340%</div><div class="cap">lead in 60 giorni</div></div>
+          <div class="statbox"><div class="big">12h/sett</div><div class="cap">risparmiate</div></div>
+          <div class="statbox"><div class="big">2 min</div><div class="cap">risposta ai lead</div></div>
+          <div class="statbox"><div class="big">&euro;0</div><div class="cap">ads spesi</div></div>
+        </div>
+        <div class="ctarow">
+          <button class="ctabtn">Prenota una call gratuita &rarr;</button>
+        </div>
         <div class="brandtag">
           <div class="mark">P</div>
           <div class="name">PatrickAI Automation</div>
         </div>
       </div>
-      <div class="right">
-        <div class="card">
-          <div class="num">01</div>
-          <div class="body">
-            <div class="t">Cattura lead</div>
-            <div class="d">Ogni contatto intercettato e qualificato in tempo reale, 24/7.</div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="num">02</div>
-          <div class="body">
-            <div class="t">Follow-up AI</div>
-            <div class="d">Messaggi personalizzati inviati al momento giusto, senza intervento.</div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="num">03</div>
-          <div class="body">
-            <div class="t">Report automatico</div>
-            <div class="d">Risultati e metriche sintetizzati e recapitati ogni mattina.</div>
-          </div>
-        </div>
-      </div>
     </div>
+
   </div>
 </div>
 <script>
@@ -148,6 +254,18 @@
   }
   fit(); window.addEventListener('resize',fit);
 })();
+var slides=document.querySelectorAll('.slide');
+var cur=0;
+function show(n){
+  slides[cur].classList.remove('active');
+  cur=(n+slides.length)%slides.length;
+  slides[cur].classList.add('active');
+}
+slides[0].classList.add('active');
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  if(e.key==='ArrowLeft')show(cur-1);
+});
 </script>
 </body>
 </html>

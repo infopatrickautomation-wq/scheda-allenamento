@@ -61,11 +61,17 @@
     z-index: -1;
     border-radius:4px;
   }
-  .slide.active .hl::before{ animation: hlReveal .5s 1.5s cubic-bezier(.16,1,.3,1) forwards; }
+  .slide.active .hl::before{ animation: hlLoop 4s 1.5s ease-in-out infinite; }
   .hl-text { position: relative; z-index: 1; }
-  .slide.active .hl-text{ animation: hlTextColor .5s 1.5s forwards; }
-  @keyframes hlReveal { to { transform:scaleX(1); opacity:1; } }
-  @keyframes hlTextColor { to { color:#EDEAE3; } }
+  @keyframes hlLoop {
+    0%    { transform:scaleX(0); opacity:0; }
+    2%    { transform:scaleX(0); opacity:1; }
+    14%   { transform:scaleX(1); opacity:1; }
+    64%   { transform:scaleX(1); opacity:1; }
+    76%   { transform:scaleX(0); opacity:1; }
+    77%   { transform:scaleX(0); opacity:0; }
+    100%  { transform:scaleX(0); opacity:0; }
+  }
 
   .sub{font-size:27px; color:var(--muted); font-weight:400; max-width:640px; line-height:1.5;
     opacity:0; transform:translateY(16px);}

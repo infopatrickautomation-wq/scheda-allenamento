@@ -110,9 +110,9 @@
 
     <!-- ===== SLIDE 1 — Product Reveal ===== -->
     <div class="slide active s1" id="s1">
-      <div class="label fu">PatrickAutomation · Automation System</div>
+      <div class="label fu">AI Automation · Next Generation</div>
       <div class="applemark fu delay1"></div>
-      <h1 class="title chrome fu delay2">PatrickAI</h1>
+      <h1 class="title chrome fu delay2">Agentic.</h1>
       <p class="subtitle fu delay3">Automazione. Reinventata.</p>
       <p class="desc fu delay4">Sistemi AI personalizzati per la tua azienda.</p>
       <button class="pill fu delay5">Scopri come &rarr;</button>
@@ -188,6 +188,13 @@ document.addEventListener('keydown',function(e){
   if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
   if(e.key==='ArrowLeft')show(cur-1);
 });
+var _tx=0,_ty=0;
+document.addEventListener('touchstart',function(e){_tx=e.changedTouches[0].clientX;_ty=e.changedTouches[0].clientY;},{passive:true});
+document.addEventListener('touchend',function(e){
+  var dx=e.changedTouches[0].clientX-_tx,dy=e.changedTouches[0].clientY-_ty;
+  if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){if(dx<0)show(cur+1);else show(cur-1);}
+  else if(Math.abs(dx)<20&&Math.abs(dy)<20){show(cur+1);}
+},{passive:true});
 </script>
 </body>
 </html>
